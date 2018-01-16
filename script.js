@@ -7,6 +7,8 @@ function initializeApp() {
 }
 
 function Display() {
+    this.foodArray = ['./images/pizza.svg', './images/rie.svg', './images/taco.svg'];
+
 
     this.init = function () {
         this.display();
@@ -28,6 +30,7 @@ function Display() {
             var foodRow = $('<div>', {
                 class: 'foodType' + x
             });
+            foodRow.css('background-image', "url('"+this.foodArray[x-1]+"')");
             container.append(foodRow);
         }
 
@@ -46,6 +49,7 @@ function Display() {
         var movieInfoPics = $('<div>', {
             class: 'movieInfoPics',
         });
+
         movieInfo.append(movieInfoPics);
 
         var trailerButton = $("<button>", {
@@ -60,6 +64,7 @@ function Display() {
                 }
             }
         });
+
         movieInfo.append(trailerButton);
 
         var displayMap = $('<div>', {
@@ -208,6 +213,7 @@ function Movie() {
                         currentMovie.on('mouseover', function () {
                             $('.movieInfoTitle').text(this.movie.title);
                             $('.movieInfoSyn').text(this.movie.synopsis);
+                            $('.movieInfoPics').empty();
                             for (var i = 0; i < this.movie.scene_images.length && i < 3; i++) {
                                 $('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
                             }
@@ -236,15 +242,14 @@ function Movie() {
                 'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
             },
             success: function (result) {
-                if (result["success"]) {
-                    console.log("Results: " + result);
-                } else {
+                if (!result)
+                    console.log("Something went wrong");
+                 else
                     console.log(result);
-                }
+                    return result;
+
             },
-            error: function (result) {
-                console.log(result)
-            }
+            error: function (result) {console.log(result)}
         };
         $.ajax(ajaxConfig);
     };
@@ -277,6 +282,7 @@ function GetYelpData() {
         }
 
     })
+
     };
     this.getData = function (data) {
         for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
