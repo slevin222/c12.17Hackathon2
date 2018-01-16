@@ -28,6 +28,7 @@ body{
    width: 14%;
    background-color: red;
    margin: 1% 0 0 0;
+   background-size: cover;
    /*display: inline-flex;*/
 }
 
