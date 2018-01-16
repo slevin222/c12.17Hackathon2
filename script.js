@@ -3,6 +3,7 @@ $(document).ready(initializeApp);
 function initializeApp() {
     display = new Display();
     display.init();
+    initMap();
 }
 
 
@@ -54,25 +55,25 @@ function Display() {
 
 }
 
-var map;
-var infowindow;
+// var map;
+// var infowindow;
 
 //needs to call function initMap because
 
 function initMap() {
     var current = {lat: 33.6441211395679, lng: -117.743128531307};
 
-    map = new google.maps.Map(document.getElementById('map'), {
+    var map = new google.maps.Map(document.getElementById('map'), {
         center: current,
         zoom: 17
     });
 
-    infowindow = new google.maps.InfoWindow();
+    var infowindow = new google.maps.InfoWindow();
     var service = new google.maps.places.PlacesService(map);
     service.nearbySearch({
         location: current,
         radius: 500,
-        type: ['Bank']
+        type: ['bank']
     }, callback);
 }
 
@@ -98,37 +99,38 @@ function createMarker(place) {
         infowindow.open(map, this);
     });
 }
-}
- function movieDataFrontPage() {
-    let ajaxConfig = {
-        data: {
-            location:"33.6441211395679,-117.743128531307",
-            limit:10,
-            countries:'US',
-            fields: 'title,scene_images,synopsis,trailers'
-        },
-        type: 'GET',
-        url: 'https://api.internationalshowtimes.com/v4/movies/',
-        headers:{
-            'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
-        },
-        success: function (result) {
-            if (result["success"]) {
-                console.log("Results: "+ result);
 
-                for( let movieData = 0 ; movieData < result.movies.length; movieData++){
-                    $('movie'+movieData).attr(result.movies[movieData]);
+    function movieDataFrontPage() {
+        let ajaxConfig = {
+            data: {
+                location: "33.6441211395679,-117.743128531307",
+                limit: 10,
+                countries: 'US',
+                fields: 'title,scene_images,synopsis,trailers'
+            },
+            type: 'GET',
+            url: 'https://api.internationalshowtimes.com/v4/movies/',
+            headers: {
+                'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
+            },
+            success: function (result) {
+                if (result["success"]) {
+                    console.log("Results: " + result);
+
+                    for (let movieData = 0; movieData < result.movies.length; movieData++) {
+                        $('movie' + movieData).attr(result.movies[movieData]);
+                    }
+                } else {
+                    console.log(result);
                 }
-            } else {
-                console.log(result);
+            },
+            error: function (result) {
+                console.log(result)
             }
-        },
-        error: function (result) {
-            console.log(result)
-        }
-    };
-    $.ajax(ajaxConfig);
-}
+        };
+        $.ajax(ajaxConfig);
+    }
+
 movieDataFrontPage();
 
 function cinemaDataSearchPage() {
