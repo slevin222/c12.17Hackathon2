@@ -3,6 +3,7 @@ $(document).ready(initializeApp);
 function initializeApp() {
     display = new Display();
     display.init();
+    initMap();
 
 }
 
@@ -74,8 +75,29 @@ function Display() {
 
 }
 
+
 var map;
 var infowindow;
+
+//needs to call function initMap because
+
+function initMap() {
+    var current = {lat: 33.6441211395679, lng: -117.743128531307};
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 15,
+        center: current
+    });
+    var marker = new google.maps.Marker({
+        position: current,
+        map: map
+    });
+
+}
+
+
+// var map;
+// var infowindow;
 
 //needs to call function initMap because
 //
@@ -83,39 +105,47 @@ var infowindow;
 //     var current = {lat: 33.6441211395679, lng: -117.743128531307};
 //
 //     var map = new google.maps.Map(document.getElementById('map'), {
-//         zoom: 15,
-//         center: current
-//     });
-//     var marker = new google.maps.Marker({
-//         position: current,
-//         map: map
+//         center: current,
+//         zoom: 17
 //     });
 //
+//     var infowindow = new google.maps.InfoWindow();
+//     var service = new google.maps.places.PlacesService(map);
+//     service.nearbySearch({
+//         location: current,
+//         radius: 500,
+//         type: ['bank']
+//     }, callback);
 // }
+//
+//
+// function callback(results, status) {
+//     if (status === google.maps.places.PlacesServiceStatus.OK) {
+//         for (var i = 0; i < results.length; i++) {
+//             createMarker(results[i]);
+//         }
+//     }
+// }
+//
+// function createMarker(place) {
+//     var placeLoc = place.geometry.location;
+//     var marker = new google.maps.Marker({
+//         map: map,
+//         position: place.geometry.location
+//     });
+//
+//     //how to add information to marker
+//
+//     google.maps.event.addListener(marker, 'click', function() {
+//         infowindow.setContent(place.name);
+//         infowindow.open(map, this);
+//     });
+//
+//
+// }
+//
 
-function callback(results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-        for (var i = 0; i < results.length; i++) {
-            createMarker(results[i]);
-        }
-    }
-}
 
-function createMarker(place) {
-    var placeLoc = place.geometry.location;
-    var marker = new google.maps.Marker({
-        map: map,
-        position: place.geometry.location
-    });
-
-    //how to add information to marker
-
-    google.maps.event.addListener(marker, 'click', function() {
-        infowindow.setContent(place.name);
-        infowindow.open(map, this);
-    });
-
-}
  function movieDataFrontPage() {
      let ajaxConfig = {
          data: {
@@ -166,8 +196,10 @@ function Movie() {
                         var currentMovie = $('.movie' + (movieDataIndex + 1));
                         currentMovie[0].movie = result.movies[movieDataIndex];
                         currentMovie.css({
+
                                 'background-image': "url('" + currentMovie[0].movie.poster_image + "')",
                                 // 'background-size': 'cover'
+
                             }
                         );
 
@@ -181,23 +213,23 @@ function Movie() {
         };
         $.ajax(ajaxConfig);
     };
-}
-    this.cinemaDataSearchPage = function(){
+
+    this.cinemaDataSearchPage = function () {
         var ajaxConfig = {
             data: {
-                location:"33.6441211395679,-117.743128531307",
-                limit:4,
-                countries:'US',
+                location: "33.6441211395679,-117.743128531307",
+                limit: 4,
+                countries: 'US',
                 fields: 'id,name,telephone,website,location,location.address'
             },
             type: 'GET',
             url: 'https://api.internationalshowtimes.com/v4/cinemas/',
-            headers:{
+            headers: {
                 'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
             },
             success: function (result) {
                 if (result["success"]) {
-                    console.log("Results: "+ result);
+                    console.log("Results: " + result);
                 } else {
                     console.log(result);
                 }
@@ -207,8 +239,8 @@ function Movie() {
             }
         };
         $.ajax(ajaxConfig);
-    }
-
+    };
+}
 var movies = new Movie();
 
 movies.cinemaDataSearchPage();
