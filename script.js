@@ -17,7 +17,7 @@ function Display() {
     this.display = function () {
         container = $("#container");
 
-        for (var i = 1; i < 8; i++) {
+        for (var i = 1; i < 11; i++) {
             var movieRow = $('<div>', {
                 class: 'movie' + i
             });
@@ -78,31 +78,20 @@ var map;
 var infowindow;
 
 //needs to call function initMap because
-
-function initMap() {
-    var current = {lat: 33.6441211395679, lng: -117.743128531307};
-
-    var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 15,
-        center: current
-    });
-    var marker = new google.maps.Marker({
-        position: current,
-        map: map
-    });
-    // map = new google.maps.Map(document.getElementById('map'), {
-    //     center: current,
-    //     zoom: 17
-    // });
-    //
-    // infowindow = new google.maps.InfoWindow();
-    // var service = new google.maps.places.PlacesService(map);
-    // service.nearbySearch({
-    //     location: current,
-    //     radius: 500,
-    //     type: ['restaurant']
-    // }, callback);
-}
+//
+// function initMap() {
+//     var current = {lat: 33.6441211395679, lng: -117.743128531307};
+//
+//     var map = new google.maps.Map(document.getElementById('map'), {
+//         zoom: 15,
+//         center: current
+//     });
+//     var marker = new google.maps.Marker({
+//         position: current,
+//         map: map
+//     });
+//
+// }
 
 function callback(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
@@ -152,65 +141,20 @@ function createMarker(place) {
          }
      }
  }
-//
-// var map;
-// var infowindow;
-//
-// //needs to call function initMap because
-//
-// function initMap() {
-//     var current = {lat: 33.6441211395679, lng: -117.743128531307};
-//
-//     map = new google.maps.Map(document.getElementById('map'), {
-//         center: current,
-//         zoom: 17
-//     });
-//
-//     infowindow = new google.maps.InfoWindow();
-//     var service = new google.maps.places.PlacesService(map);
-//     service.nearbySearch({
-//         location: current,
-//         radius: 500,
-//         type: ['Bank']
-//     }, callback);
-// }
-//
-// function callback(results, status) {
-//     if (status === google.maps.places.PlacesServiceStatus.OK) {
-//         for (var i = 0; i < results.length; i++) {
-//             createMarker(results[i]);
-//         }
-//     }
-// }
-//
-// function createMarker(place) {
-//     var placeLoc = place.geometry.location;
-//     var marker = new google.maps.Marker({
-//         map: map,
-//         position: place.geometry.location
-//     });
-//
-//     //how to add information to marker
-//
-//     google.maps.event.addListener(marker, 'click', function() {
-//         infowindow.setContent(place.name);
-//         infowindow.open(map, this);
-//     });
-// }
 
 
-function Movie(){
-    this.movieDataFrontPage = function(){
+function Movie() {
+    this.movieDataFrontPage = function () {
         var ajaxConfig = {
             data: {
-                location:"33.6441211395679,-117.743128531307",
-                limit:10,
-                countries:'US',
+                location: "33.6441211395679,-117.743128531307",
+                limit: 10,
+                countries: 'US',
                 fields: 'title,poster_image.flat,synopsis,trailers'
             },
             type: 'GET',
             url: 'https://api.internationalshowtimes.com/v4/movies/',
-            headers:{
+            headers: {
                 'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
             },
             success: function (result) {
@@ -218,12 +162,12 @@ function Movie(){
                     console.log("We have empty results or something went wrong");
                 } else {
                     console.log(result);
-                    for( var movieDataIndex = 0 ; movieDataIndex < 8; movieDataIndex++){
-                        var currentMovie =  $('.movie'+(movieDataIndex+1));
+                    for (var movieDataIndex = 0; movieDataIndex < 10; movieDataIndex++) {
+                        var currentMovie = $('.movie' + (movieDataIndex + 1));
                         currentMovie[0].movie = result.movies[movieDataIndex];
                         currentMovie.css({
-                            'background-image': "url('"+currentMovie[0].movie.poster_image+"')",
-                            // 'background-size': 'cover'
+                                'background-image': "url('" + currentMovie[0].movie.poster_image + "')",
+                                // 'background-size': 'cover'
                             }
                         );
 
@@ -237,7 +181,7 @@ function Movie(){
         };
         $.ajax(ajaxConfig);
     };
-
+}
     this.cinemaDataSearchPage = function(){
         var ajaxConfig = {
             data: {
@@ -264,7 +208,7 @@ function Movie(){
         };
         $.ajax(ajaxConfig);
     }
-}
+
 var movies = new Movie();
 
 movies.cinemaDataSearchPage();
