@@ -57,7 +57,7 @@ function Display() {
         var trailerButton = $("<button>", {
             type: "button",
             class: "btn btn-info btn-lg",
-            text: "Show Movie Trailer",
+            text: "Click to Show Movie Trailer",
             'data-target': 'trailerModal',
             'data-toggle': "modal",
             on: {
