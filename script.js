@@ -1,13 +1,13 @@
 $(document).ready(initializeApp);
 
 function initializeApp() {
-	display = new Display();
-	display.init();
-	initMap();
+    display = new Display();
+    display.init();
+    initMap();
 }
 
 function Display() {
-  
+
     this.init = function () {
         this.display();
     };
@@ -35,15 +35,15 @@ function Display() {
             class: 'movieInfo',
         });
         container.append(movieInfo);
-        var movieInfoTitle =  $('<div>', {
+        var movieInfoTitle = $('<div>', {
             class: 'movieInfoTitle',
         });
         movieInfo.append(movieInfoTitle);
-        var movieInfoSyn =  $('<div>', {
+        var movieInfoSyn = $('<div>', {
             class: 'movieInfoSyn',
         });
         movieInfo.append(movieInfoSyn);
-        var movieInfoPics =  $('<div>', {
+        var movieInfoPics = $('<div>', {
             class: 'movieInfoPics',
         });
         movieInfo.append(movieInfoPics);
@@ -86,19 +86,19 @@ var infowindow;
 //needs to call function initMap because
 
 function initMap() {
-	var current = {
-		lat: 33.6441211395679,
-		lng: -117.743128531307
-	};
+    var current = {
+        lat: 33.6441211395679,
+        lng: -117.743128531307
+    };
 
-	var map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 15,
-		center: current
-	});
-	var marker = new google.maps.Marker({
-		position: current,
-		map: map
-	});
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 15,
+        center: current
+    });
+    var marker = new google.maps.Marker({
+        position: current,
+        map: map
+    });
 
 }
 
@@ -153,7 +153,7 @@ function initMap() {
 //
 
 function Movie() {
-  
+
     this.movieDataFrontPage = function () {
         var ajaxConfig = {
             data: {
@@ -226,40 +226,41 @@ function Movie() {
 var movies = new Movie();
 
 function GetYelpData() {
-	this.yelpData = function(long, lat) {
-		$.ajax({
-			url: "http://danielpaschal.com/yelpproxy.php",
-			method: "GET",
-			dataType: "JSON",
-			data: {
-				api_key: "dYgZH0Ww1s8M1O3ERoy1zlO76NJdF5SCsCvZ7JcK2E7-9JQ2n2GFVQdNweumwfphSpCOKCB-GdhKe0kdNeepo7J91qE78gAJzDidYLCMGWEKaq6TK6kBS_Z2JvNcWnYx",
-				term: "mexican restaurant",
-				latitude: 33.6441211395679,
-				longitude: -117.743128531307,
-				limit: 5,
-				radius: 8046
-			},
-			success: (response) => {
-				console.log(response);
-				let dataObj = response;
-				this.getData(dataObj);
-			},
-			error: (response) => {
-				console.log(response);
-			}
+    this.yelpData = function (long, lat) {
+        $.ajax({
+            url: "http://danielpaschal.com/yelpproxy.php",
+            method: "GET",
+            dataType: "JSON",
+            data: {
+                api_key: "dYgZH0Ww1s8M1O3ERoy1zlO76NJdF5SCsCvZ7JcK2E7-9JQ2n2GFVQdNweumwfphSpCOKCB-GdhKe0kdNeepo7J91qE78gAJzDidYLCMGWEKaq6TK6kBS_Z2JvNcWnYx",
+                term: "mexican restaurant",
+                latitude: 33.6441211395679,
+                longitude: -117.743128531307,
+                limit: 5,
+                radius: 8046
+            },
+            success: (response) = > {
+            console.log(response);
+        let dataObj = response;
+        this.getData(dataObj);
+    },
+        error: (response) =
+    >
+        {
+            console.log(response);
+        }
 
-		})
-	}
-	this.getData = function(data) {
-		for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
-			console.log(data.businesses[dataIndex].categories);
-		}
-	}
+    })
+    };
+    this.getData = function (data) {
+        for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
+            console.log(data.businesses[dataIndex].categories);
+        }
+    }
 
 }
+
 var yelp = new GetYelpData();
 yelp.yelpData();
-
-var movies = new Movie();
 
 movies.cinemaDataSearchPage();
