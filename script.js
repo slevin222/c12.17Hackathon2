@@ -3,6 +3,7 @@ $(document).ready(initializeApp);
 function initializeApp() {
     display = new Display();
     display.init();
+    initMap();
 }
 
 
@@ -53,52 +54,51 @@ function Display() {
         container.append(title);
     }
 }
-//
+
 // var map;
 // var infowindow;
-//
-// //needs to call function initMap because
-//
-// function initMap() {
-//     var current = {lat: 33.6441211395679, lng: -117.743128531307};
-//
-//     map = new google.maps.Map(document.getElementById('map'), {
-//         center: current,
-//         zoom: 17
-//     });
-//
-//     infowindow = new google.maps.InfoWindow();
-//     var service = new google.maps.places.PlacesService(map);
-//     service.nearbySearch({
-//         location: current,
-//         radius: 500,
-//         type: ['Bank']
-//     }, callback);
-// }
-//
-// function callback(results, status) {
-//     if (status === google.maps.places.PlacesServiceStatus.OK) {
-//         for (var i = 0; i < results.length; i++) {
-//             createMarker(results[i]);
-//         }
-//     }
-// }
-//
-// function createMarker(place) {
-//     var placeLoc = place.geometry.location;
-//     var marker = new google.maps.Marker({
-//         map: map,
-//         position: place.geometry.location
-//     });
-//
-//     //how to add information to marker
-//
-//     google.maps.event.addListener(marker, 'click', function() {
-//         infowindow.setContent(place.name);
-//         infowindow.open(map, this);
-//     });
-// }
 
+//needs to call function initMap because
+
+function initMap() {
+    var current = {lat: 33.6441211395679, lng: -117.743128531307};
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: current,
+        zoom: 17
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+    var service = new google.maps.places.PlacesService(map);
+    service.nearbySearch({
+        location: current,
+        radius: 500,
+        type: ['bank']
+    }, callback);
+}
+
+function callback(results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+            createMarker(results[i]);
+        }
+    }
+}
+
+function createMarker(place) {
+    var placeLoc = place.geometry.location;
+    var marker = new google.maps.Marker({
+        map: map,
+        position: place.geometry.location
+    });
+
+    //how to add information to marker
+
+    google.maps.event.addListener(marker, 'click', function() {
+        infowindow.setContent(place.name);
+        infowindow.open(map, this);
+    });
+}
 
 function Movie(){
     this.movieDataFrontPage = function(){
