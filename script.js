@@ -3,6 +3,7 @@ $(document).ready(initializeApp);
 function initializeApp() {
     display = new Display();
     display.init();
+
 }
 
 
@@ -15,22 +16,37 @@ function Display() {
         var container = $("#container");
         for (var i = 1; i < 8; i++) {
             var movieRow = $('<div>', {
-                class: 'movie'+i
+                class: 'movie' + i
             });
             container.append(movieRow);
         }
 
         for (var x = 1; x < 8; x++) {
             var foodRow = $('<div>', {
-                class: 'foodType'+x
+                class: 'foodType' + x
             });
             container.append(foodRow);
         }
 
-        var movieInfo =  $('<div>', {
-            class: 'movieInfo'
+        var movieInfo = $('<div>', {
+            class: 'movieInfo',
+
         });
         container.append(movieInfo);
+
+        var trailerButton = $("<button>", {
+            type: "button",
+            class: "btn btn-info btn-lg",
+            text: "Show Movie Trailer",
+            'data-target': 'trailerModal',
+            'data-toggle': "modal",
+            on: {
+                click: function () {
+                    $('#trailerModal').modal('show');
+                }
+            }
+        });
+        movieInfo.append(trailerButton);
 
         var displayMap =  $('<div>', {
             class: 'displayMap',
@@ -51,7 +67,6 @@ function Display() {
 
 
 
-
 }
 
 var map;
@@ -62,18 +77,26 @@ var infowindow;
 function initMap() {
     var current = {lat: 33.6441211395679, lng: -117.743128531307};
 
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: current,
-        zoom: 17
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 15,
+        center: current
     });
-
-    infowindow = new google.maps.InfoWindow();
-    var service = new google.maps.places.PlacesService(map);
-    service.nearbySearch({
-        location: current,
-        radius: 500,
-        type: ['Bank']
-    }, callback);
+    var marker = new google.maps.Marker({
+        position: current,
+        map: map
+    });
+    // map = new google.maps.Map(document.getElementById('map'), {
+    //     center: current,
+    //     zoom: 17
+    // });
+    //
+    // infowindow = new google.maps.InfoWindow();
+    // var service = new google.maps.places.PlacesService(map);
+    // service.nearbySearch({
+    //     location: current,
+    //     radius: 500,
+    //     type: ['restaurant']
+    // }, callback);
 }
 
 function callback(results, status) {
@@ -97,7 +120,7 @@ function createMarker(place) {
         infowindow.setContent(place.name);
         infowindow.open(map, this);
     });
-}
+
 }
  function movieDataFrontPage() {
     let ajaxConfig = {
