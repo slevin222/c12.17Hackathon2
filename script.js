@@ -12,7 +12,7 @@ function Display() {
     };
 
     this.display = function () {
-        var container = $("container");
+        var container = $("#container");
         for (var i = 1; i < 8; i++) {
             var movieRow = $('<div>', {
                 class: 'movie'+i
