@@ -123,8 +123,7 @@ function Movie(){
                         var currentMovie =  $('.movie'+(movieDataIndex+1));
                         currentMovie[0].movie = result.movies[movieDataIndex];
                         currentMovie.css({
-                            'background-image': "url('"+currentMovie[0].movie.poster_image+"')",
-                            'background-size': 'cover'
+                            'background-image': "url('"+currentMovie[0].movie.poster_image+"')"
                             }
                         );
 
