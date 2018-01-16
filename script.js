@@ -61,7 +61,7 @@ function Display() {
 //needs to call function initMap because
 
 function initMap() {
-    var current = {lat: 33.6441211395679, lng: -117.743128531307};
+    var current = {lat: 33.6509, lng: -117.7441};
 
     var map = new google.maps.Map(document.getElementById('map'), {
         center: current,
@@ -73,7 +73,7 @@ function initMap() {
     service.nearbySearch({
         location: current,
         radius: 500,
-        type: ['bank']
+        type: ['movie_theater']
     }, callback);
 }
 
