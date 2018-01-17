@@ -1,17 +1,18 @@
 $(document).ready(initializeApp);
 
 function initializeApp() {
-    display = new Display();
-    display.init();
-    initMap();
+	display = new Display();
+	display.init();
+	initMap();
 }
 
 function Display() {
-
+    this.foodArray = ['./images/pizza.svg', './images/noodles.svg', './images/taco.svg','./images/sushi.svg','./images/Burger.svg','./images/Coffee.svg','./images/Beer.svg'];
+  
     this.init = function () {
         this.display();
     };
-
+  
     this.display = function () {
         container = $("#container");
 
@@ -28,6 +29,7 @@ function Display() {
             var foodRow = $('<div>', {
                 class: 'foodType' + x
             });
+            foodRow.css('background-image', "url('" + this.foodArray[x - 1] + "')");
             container.append(foodRow);
         }
 
@@ -46,6 +48,7 @@ function Display() {
         var movieInfoPics = $('<div>', {
             class: 'movieInfoPics',
         });
+
         movieInfo.append(movieInfoPics);
 
         var trailerButton = $("<button>", {
@@ -60,6 +63,7 @@ function Display() {
                 }
             }
         });
+
         movieInfo.append(trailerButton);
 
         var displayMap = $('<div>', {
@@ -145,8 +149,8 @@ function initMap() {
 }
 
 
-function Movie() {
 
+function Movie() {
     this.movieDataFrontPage = function () {
         var ajaxConfig = {
             data: {
@@ -174,9 +178,12 @@ function Movie() {
                         currentMovie.on('mouseover', function () {
                             $('.movieInfoTitle').text(this.movie.title);
                             $('.movieInfoSyn').text(this.movie.synopsis);
+                            $('.movieInfoPics').empty();
                             for (var i = 0; i < this.movie.scene_images.length && i < 3; i++) {
                                 $('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
                             }
+                            // var url = this.movie.trailers[0].trailer_files[0].url.replace("watch?v=", "embed/");
+                            // $('#video-modal').empty().attr('src', url);
                         })
                     }
                 }
@@ -188,7 +195,7 @@ function Movie() {
         $.ajax(ajaxConfig);
     };
 
-    this.cinemaDataSearchPage = function (location) {
+    this.cinemaDataSearch = function (location) {
         var ajaxConfig = {
             data: {
                 location: location,
@@ -202,10 +209,18 @@ function Movie() {
                 'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
             },
             success: function (result) {
-                if (result["success"]) {
-                    console.log("Results: " + result);
-                } else {
+                if (!result) {
+                    console.log("Something went wrong");
+                }
+                else {
                     console.log(result);
+                    var cinemaLocations = [];
+                    for (var i = 0; i < result.cinemas.length; i++) {
+                        let cinema = {lat:result.cinemas[i].location.lat, lng:result.cinemas[i].location.lon};
+                        console.log(cinema);
+                        cinemaLocations.push(cinema);
+                    }
+                    return result;
                 }
             },
             error: function (result) {
@@ -233,26 +248,21 @@ function GetYelpData() {
                 radius: 8046
             },
             success: (response) => {
-            console.log(response);
-        let dataObj = response;
-        this.getData(dataObj);
-    },
-        error: (response) =>
-        {
-            console.log(response);
-        }
-
-    })
+                console.log(response);
+                let dataObj = response;
+                this.getData(dataObj);
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
     };
     this.getData = function (data) {
         for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
             console.log(data.businesses[dataIndex].categories);
         }
     }
-
 }
 
 var yelp = new GetYelpData();
-yelp.yelpData();
-
-movies.cinemaDataSearchPage();
+movies.cinemaDataSearch();
