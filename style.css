@@ -52,7 +52,7 @@ body{
     width: 33%;
 }
 .movieInfoTitle{
-    height: 15%;
+    height: 10%;
     width: 100%;
 }
 .movieInfoSyn{
@@ -63,6 +63,7 @@ body{
     height: 35%;
     width: 100%;
 }
+
 
 .displayMap{
     height: 40%;
@@ -92,4 +93,8 @@ body{
 .modal-body a{
     height: 100%;
     width: 100%;
+}
+
+.btn-info{
+    margin: 0 2% 0 2%;
 }

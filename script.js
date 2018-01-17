@@ -1,19 +1,20 @@
 $(document).ready(initializeApp);
 
 function initializeApp() {
-    display = new Display();
-    display.init();
-    initMap();
+	display = new Display();
+	display.init();
+	initMap();
 }
 
-function Display() {
-    this.foodArray = ['./images/Pizza.svg', './images/Noodles.svg', './images/Taco.svg', './images/Sushi.svg', './images/Burger.svg', './images/Coffee.svg', './images/Beer.svg'];
 
+function Display() {
+
+    this.foodArray = ['./images/Pizza.svg', './images/Noodles.svg', './images/Taco.svg', './images/Sushi.svg', './images/Burger.svg', './images/Coffee.svg', './images/Beer.svg'];
 
     this.init = function () {
         this.display();
     };
-
+  
     this.display = function () {
         container = $("#container");
 
@@ -52,21 +53,33 @@ function Display() {
 
         movieInfo.append(movieInfoPics);
 
-        var trailerButton = $("<button>", {
+        var theatreButton = $("<button>", {
             type: "button",
-            class: "btn btn-info btn-lg",
-            text: "Show Movie Trailer",
-            'data-target': 'trailerModal',
+            class: "btn btn-info btn-md",
+            text: "Show Theatres",
+            'data-target': 'theatreModal',
             'data-toggle': "modal",
             on: {
                 click: function () {
-                    $('#trailerModal').modal('show');
+                    $('#theatreModal').modal('show');
                 }
             }
         });
 
-        movieInfo.append(trailerButton);
-
+        movieInfo.append(theatreButton);
+        var showTimes = $("<button>", {
+            type: "button",
+            class: "btn btn-info btn-md",
+            text: "Show Movie Times",
+            'data-target': 'showTimesModal',
+            'data-toggle': "modal",
+            on: {
+                click: function () {
+                    $('#showTimesModal').modal('show');
+                }
+            }
+        });
+        movieInfo.append(showTimes);
         var displayMap = $('<div>', {
             class: 'displayMap',
             id: 'map'
@@ -84,6 +97,7 @@ function Display() {
         container.append(title);
     }
 }
+
 
 
 var markers = [];
@@ -118,7 +132,6 @@ function addMarkerWithTimeout(position, timeout) {
     }, timeout);
 }
 
-
 function clearMarkers() {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
@@ -136,7 +149,6 @@ function placeMarker(location) {
 
 
 function Movie() {
-
     this.movieDataFrontPage = function () {
         var ajaxConfig = {
             data: {
@@ -221,6 +233,7 @@ function Movie() {
 var movies = new Movie();
 
 function GetYelpData() {
+
     this.yelpData = function (long, lat) {
         $.ajax({
             url: "http://danielpaschal.com/yelpproxy.php",
@@ -253,6 +266,4 @@ function GetYelpData() {
 }
 
 var yelp = new GetYelpData();
-yelp.yelpData();
-
 movies.cinemaDataSearch();
