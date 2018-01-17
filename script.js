@@ -5,10 +5,10 @@ function initializeApp() {
 	$("#container").hide();
 }
 
-function changeScreen() {
-	var zipCode = $('.form-control').val();
-	yelp.yelpData("", zipCode);
 
+function changeScreen() {
+	// var zipCode = $(".form-control").val();
+	// console.log(zipCode);
 	$("#introPage").fadeOut(1000);
 	display = new Display();
 	display.init();
@@ -18,7 +18,37 @@ function changeScreen() {
 
 function Display() {
 
-	this.foodArray = ['./images/Pizza.svg', './images/Noodles.svg', './images/Taco.svg', './images/Sushi.svg', './images/Burger.svg', './images/Coffee.svg', './images/Beer.svg'];
+	//this.foodArray = ['./images/Pizza.svg', './images/Noodles.svg', './images/Taco.svg', './images/Sushi.svg', './images/Burger.svg', './images/Coffee.svg', './images/Beer.svg'];
+	this.foodObject = [{
+			name: "pizza",
+			img: './images/Pizza.svg'
+		},
+		{
+			name: "noodles",
+			img: './images/Noodles.svg'
+		},
+		{
+			name: "mexican",
+			img: './images/Taco.svg'
+		},
+		{
+			name: "sushi",
+			img: './images/Sushi.svg'
+		},
+		{
+			name: "burger",
+			img: './images/Burger.svg'
+		},
+		{
+			name: "coffee",
+			img: './images/Coffee.svg'
+		},
+		{
+			name: "bear",
+			img: './images/Beer.svg'
+		},
+
+	];
 
 	this.init = function() {
 		this.display();
@@ -38,10 +68,17 @@ function Display() {
 
 		for (var x = 1; x < 8; x++) {
 			var foodRow = $('<div>', {
-				class: 'foodType' + x
+				class: 'foodType' + x,
+				id: 'foodType',
+				click: function() {
+					getTerm();
+				}
+
 			});
-			foodRow.css('background-image', "url('" + this.foodArray[x - 1] + "')");
+			foodRow.css('background-image', "url('" + this.foodObject[x - 1].img + "')");
 			container.append(foodRow);
+
+
 		}
 
 		var movieInfo = $('<div>', {
@@ -102,42 +139,46 @@ function Display() {
 		var foodInput = $('<input>', {
 			type: "text",
 			name: "genre",
+
 			class: "foodInput"
 		});
-		var locationInput = $('<input>', {
-			type: "text",
-			name: "zipCode",
-			class: "locationInput",
-			placeholder: "Input Zipcode"
-		});
+		// var locationInput = $('<input>', {
+		// 	type: "text",
+		// 	name: "zipCode",
+		// 	class: "locationInput",
+		// 	placeholder: "Input Zipcode"
+		// });
 		var foodButton = $('<input>', {
 			type: "button",
+			class: "foodButton",
 			click: function() {
-				var term = $('.foodInput').val();
-				var location = $('.locationInput').val();
-				yelp.yelpData(term, location);
+				let term = $('.foodInput').val();
+				placeMarker(currentLocation, term);
 			},
 			value: "Submit"
 		})
-		foodInfo.append(foodInput, locationInput, foodButton);
+		foodInfo.append(foodInput, foodButton)
 		for (let h = 1; h < 6; h++) {
-			var foodPlace = $("<div>", {
-				class: "foodPlace" + h
+			var foodPlace = $('<div>', {
+				class: "foodPlace" + h,
+				id: "foodPlace"
 			})
 			foodInfo.append(foodPlace);
 		}
-		// var title = $('<div>', {
-		// 	class: 'footer'
-		// });
-		// container.append(title);
+
 	}
 
 }
 
+function getTerm() {
 
+
+}
 
 var markers = [];
 var map;
+var currentLocation;
+
 
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -148,87 +189,68 @@ function initMap() {
 		}
 	});
 	google.maps.event.addListener(map, 'click', function(event) {
-		placeMarker(event.latLng);
+		// 	$('.foodButton').on('click', function() {
+		// 		let term = $('.foodInput').val();
+		// 		placeMarker(event.latLng, term);
+		// 	})
+		$('.foodPlace').text('');
+		let term = $('.foodInput').val();
+		clearMarkers();
+		placeMarker(event.latLng, term);
+		console.log("this is" + event.latLng);
+		currentLocation = event.latLng;
+
+
 	});
+
+
+	// drop([{lat: 33.6441211395679, lng: -117.743128531307}]);
 }
 
-
-// if (navigator.geolocation) {
-//     navigator.geolocation.getCurrentPosition(function(position) {
-//         var pos = {
-//             lat: position.coords.latitude,
-//             lng: position.coords.longitude
-//
-//         };
-//         console.log(pos)
-//
-//         var current = {lat: pos.lat, lng: pos.lng};
-//         // var current = navigator.geolocation;
-//
-//         var map = new google.maps.Map(document.getElementById('map'), {
-//             zoom: 13,
-//             center: current
-//         });
-//         var marker = new google.maps.Marker({
-//             position: current,
-//             map: map
-//         });
-//
-//         map.setCenter(pos);
-//     }, function() {
-//         handleLocationError(true, infoWindow, map.getCenter());
-//     });
-//
-// } else {
-//     // Browser doesn't support Geolocation
-//     handleLocationError(false, infoWindow, map.getCenter());
+// function drop(position){
+//     clearMarkers();
+//     markers.push(new google.maps.Marker({
+//         position: position,
+//         map: map,
+//         animation: google.maps.Animation.DROP
+//     }));
 // }
-//
-// function createMakers(results) {
-//     for (var i = 0; i < results.length; i++) {
-//         var coords = results[i];
-//         var latLng = new google.maps.LatLng(coords[1], coords[0]);
-//         var marker = new google.maps.Marker({
-//             position: latLng,
-//             map: map
-//         });
-//     }
-// }
-//
-//
-//
-// var results = [
-//
-//     {lat: 33.6447809695316, lng: -117.74444454841},
-//     {lat: 33.6514285646533, lng: -117.746069293683},
-//     {lat: 33.620624, lng: -117.699047},
-//     {lat: 33.6220781, lng: -117.684251},
-//     {lat: 33.62161, lng: -117.73214},
-// ];
-//
-// createMakers(results);
 
-
-
-function drop(array) {
-	clearMarkers();
+function dropCinema(array) {
 	console.log(array);
 	for (var i = 0; i < array.length; i++) {
-		addMarkerWithTimeout(array[i], i * 200);
+		addCinemaWithTimeout(array[i], i * 200);
 	}
 }
 
-function addMarkerWithTimeout(position, timeout) {
+function addCinemaWithTimeout(position, timeout) {
 	window.setTimeout(function() {
 		markers.push(new google.maps.Marker({
 			position: position,
 			map: map,
-			// icon: 'https://findicons.com/files/icons/2166/oxygen/128/applications_toys.png',
+			icon: './images/Cinema-Icon.png',
 			animation: google.maps.Animation.DROP
 		}));
 	}, timeout);
 }
 
+function dropRestaurant(array) {
+	console.log(array);
+	for (var i = 0; i < array.length; i++) {
+		addRestaurantWithTimeout(array[i], i * 200);
+	}
+}
+
+function addRestaurantWithTimeout(position, timeout) {
+	window.setTimeout(function() {
+		markers.push(new google.maps.Marker({
+			position: position,
+			map: map,
+			icon: './images/Restaurant-Icon.png',
+			animation: google.maps.Animation.DROP
+		}));
+	}, timeout);
+}
 
 function clearMarkers() {
 	for (var i = 0; i < markers.length; i++) {
@@ -237,12 +259,20 @@ function clearMarkers() {
 	markers = [];
 }
 
-function placeMarker(location) {
+function placeMarker(location, foodtype) {
 	clearMarkers();
-	var marker = new google.maps.Marker({
+	markers.push(new google.maps.Marker({
 		position: location,
-		map: map
-	});
+		map: map,
+		animation: google.maps.Animation.DROP
+	}));
+	var locString = location.lat() + "," + location.lng();
+	var yelpLocation = {
+		lat: location.lat(),
+		lng: location.lng()
+	};
+	movies.cinemaDataSearch(locString);
+	yelp.yelpData(foodtype, yelpLocation);
 }
 
 
@@ -319,7 +349,7 @@ function Movie() {
 						cinemaLocations.push(cinema);
 					}
 					console.log(cinemaLocations);
-					drop(cinemaLocations);
+					dropCinema(cinemaLocations);
 				}
 			},
 			error: function(result) {
@@ -328,12 +358,10 @@ function Movie() {
 		};
 		$.ajax(ajaxConfig);
 	};
+
 }
 
-var movies = new Movie();
-
 function GetYelpData() {
-
 	this.yelpData = function(term, location) {
 		$.ajax({
 			url: "http://danielpaschal.com/yelpproxy.php",
@@ -361,26 +389,21 @@ function GetYelpData() {
 	this.getData = function(data) {
 		var restaurantLocation = [];
 		var restaurantName = [];
+		$('#foodPlace').text('');
 		for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
 			let restaurant = {
 				lat: data.businesses[dataIndex].coordinates.latitude,
 				lng: data.businesses[dataIndex].coordinates.longitude
 			};
-			let name = data.businesses[dataIndex].name
-			console.log("this is single restaurant " + restaurant);
+			let name = data.businesses[dataIndex].name;
+			console.log("this is single" + restaurant);
 			restaurantLocation.push(restaurant);
 			$('.foodPlace' + (dataIndex + 1)).text(name);
-			restaurantName.push(name);
-
 		}
 		console.log("the whole" + restaurantLocation);
-		drop(restaurantLocation);
+		dropRestaurant(restaurantLocation);
 	}
 }
-var testObj = {
-	lat: 33.6441211395679,
-	lng: -117.743128531307
-}
+
+var movies = new Movie();
 var yelp = new GetYelpData();
-yelp.yelpData("sushi", testObj);
-movies.cinemaDataSearch(testObj);
