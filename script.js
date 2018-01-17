@@ -274,7 +274,9 @@ let movies = {
                             let str = String(trailer);
 
                             let res = str.replace("watch?v=", "embed/");
-                            console.log(res);
+                            // let autoplay = res + "?autoplay=1";
+                            // console.log(autoplay)
+                            // console.log(res);
                             $('#video').attr('src', res);
                         });
                         currentMovie.on('click', function () {
