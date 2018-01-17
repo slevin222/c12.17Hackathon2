@@ -194,7 +194,7 @@ function initMap() {
 		// 		let term = $('.foodInput').val();
 		// 		placeMarker(event.latLng, term);
 		// 	})
-		$('#foodPlace').text('');
+		$('#foodPlace').empty();;
 		let term = $('.foodInput').val();
 		clearMarkers();
 		placeMarker(event.latLng, term);
