@@ -52,7 +52,7 @@ body{
     width: 33%;
 }
 .movieInfoTitle{
-    height: 15%;
+    height: 10%;
     width: 100%;
 }
 .movieInfoSyn{
@@ -64,18 +64,7 @@ body{
     width: 100%;
 }
 
-.movieInfoTitle{
-    height: 15%;
-    width: 100%;
-}
-.movieInfoSyn{
-    height: 40%;
-    width: 100%;
-}
-.movieInfoPics{
-    height: 35%;
-    width: 100%;
-}
+
 .displayMap{
     height: 40%;
     width: 48%;
