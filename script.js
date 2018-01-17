@@ -242,13 +242,18 @@ function Movie() {
 
                     console.log(result.movies[0].trailers[0].trailer_files[0].url);
                     var trailer = result.movies[0].trailers[0].trailer_files[0].url;
-                    trailer = $('#jumanji').attr('src');
+                    // trailer = $('#jumanji').attr('src');
                     $("#myModal").on('hide.bs.modal', function(){
                         $("#jumanji").attr('src', '');
                     });
                     $("#myModal").on('show.bs.modal', function(){
                         $("#jumanji").attr('src', trailer);
                     });
+
+                    var str = String(trailer);
+                    var res = str.replace("watch?v=", "embed/");
+                    console.log(res);
+
 
                     /////
 
