@@ -229,7 +229,23 @@ function Movie() {
 					console.log("We have empty results or something went wrong");
 				} else {
 					console.log(result);
-					for (var movieDataIndex = 0; movieDataIndex < 10; movieDataIndex++) {
+
+					////// MOVIE TRAILER ///////
+
+
+                    console.log(result.movies[0].trailers[0].trailer_files[0].url);
+                    var trailer = result.movies[0].trailers[0].trailer_files[0].url;
+                    trailer = $('#jumanji').attr('src');
+                    $("#myModal").on('hide.bs.modal', function(){
+                        $("#jumanji").attr('src', '');
+                    });
+                    $("#myModal").on('show.bs.modal', function(){
+                        $("#jumanji").attr('src', trailer);
+                    });
+
+                    /////
+
+                    for (var movieDataIndex = 0; movieDataIndex < 10; movieDataIndex++) {
 						var currentMovie = $('#movie' + (movieDataIndex + 1));
 						currentMovie[0].movie = result.movies[movieDataIndex];
 						currentMovie.css({
