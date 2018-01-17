@@ -143,8 +143,10 @@ let display = {
 		let foodInput = $('<input>', {
 			type: "text",
 			name: "genre",
+            placeholder: "Enter food type",
 			class: "foodInput"
 		});
+
 		// let locationInput = $('<input>', {
 		// 	type: "text",
 		// 	name: "zipCode",
@@ -153,6 +155,7 @@ let display = {
 		// });
 		let foodButton = $('<input>', {
 			type: "button",
+            class: "btn btn-info btn-md",
 			click: function() {
 				let term = $('.foodInput').val();
 				placeMarker(currentLocation, term);
@@ -160,10 +163,10 @@ let display = {
 			value: "Submit"
 		});
 		foodInfo.append(foodInput, foodButton);
-		let title = $('<div>', {
-			class: 'footer'
-		});
-		container.append(title);
+		// let title = $('<div>', {
+		// 	class: 'footer'
+		// });
+		// container.append(title);
 
 
 	}
