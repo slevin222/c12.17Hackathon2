@@ -81,14 +81,12 @@ function Display() {
 }
 
 
-var map;
+// var map;
 var infowindow;
 
 //needs to call function initMap because
 
 function initMap() {
-
-
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -104,7 +102,7 @@ function initMap() {
             // var current = navigator.geolocation;
 
             var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 15,
+                zoom: 13,
                 center: current
             });
             var marker = new google.maps.Marker({
@@ -112,72 +110,40 @@ function initMap() {
                 map: map
             });
 
-            // var infoWindow = new google.maps.InfoWindow;
-            //
-            // infoWindow.setPosition(pos);
-            // infoWindow.setContent('Location found.');
-            // infoWindow.open(map);
             map.setCenter(pos);
         }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
         });
+
     } else {
         // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
     }
+    // Create an array of alphabetical characters used to label the markers.
+    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var locations = [
 
+        {lat: 33.6447809695316, lng: -117.74444454841},
+        {lat: 33.6514285646533, lng: -117.746069293683},
+        {lat: 33.620624, lng: -117.699047},
+        {lat: 33.6220781, lng: -117.684251},
+        {lat: 33.62161, lng: -117.73214},
+    ];
+
+
+    var markers = locations.map(function(location, i) {
+        return new google.maps.Markers({
+            position: location,
+            label: labels[i % labels.length]
+        });
+    });
+
+// Add a marker clusterer to manage the markers.
+    var markerCluster = new MarkerClusterer(map, markers,
+        {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'})
 
 }
 
-
-// var map;
-// var infowindow;
-
-//needs to call function initMap because
-//
-// function initMap() {
-//     var current = {lat: 33.6441211395679, lng: -117.743128531307};
-//
-//     var map = new google.maps.Map(document.getElementById('map'), {
-//         center: current,
-//         zoom: 17
-//     });
-//
-//     var infowindow = new google.maps.InfoWindow();
-//     var service = new google.maps.places.PlacesService(map);
-//     service.nearbySearch({
-//         location: current,
-//         radius: 500,
-//         type: ['bank']
-//     }, callback);
-// }
-//
-//
-// function callback(results, status) {
-//     if (status === google.maps.places.PlacesServiceStatus.OK) {
-//         for (var i = 0; i < results.length; i++) {
-//             createMarker(results[i]);
-//         }
-//     }
-// }
-//
-// function createMarker(place) {
-//     var placeLoc = place.geometry.location;
-//     var marker = new google.maps.Marker({
-//         map: map,
-//         position: place.geometry.location
-//     });
-//
-//     //how to add information to marker
-//
-//     google.maps.event.addListener(marker, 'click', function() {
-//         infowindow.setContent(place.name);
-//         infowindow.open(map, this);
-//     });
-//
-//
-// }
-//
 
 function Movie() {
 
