@@ -5,10 +5,11 @@ function initializeApp() {
 	display.init();
 	initMap();
 }
-var restarurantLocation = [];
+
 
 function Display() {
-	this.foodArray = ['./images/pizza.svg', './images/noodles.svg', './images/taco.svg', './images/sushi.svg', './images/Burger.svg', './images/Coffee.svg', './images/Beer.svg'];
+
+	this.foodArray = ['./images/Pizza.svg', './images/Noodles.svg', './images/Taco.svg', './images/Sushi.svg', './images/Burger.svg', './images/Coffee.svg', './images/Beer.svg'];
 
 	this.init = function() {
 		this.display();
@@ -52,21 +53,33 @@ function Display() {
 
 		movieInfo.append(movieInfoPics);
 
-		var trailerButton = $("<button>", {
+		var theatreButton = $("<button>", {
 			type: "button",
-			class: "btn btn-info btn-lg",
-			text: "Show Movie Trailer",
-			'data-target': 'trailerModal',
+			class: "btn btn-info btn-md",
+			text: "Show Theatres",
+			'data-target': 'theatreModal',
 			'data-toggle': "modal",
 			on: {
 				click: function() {
-					$('#trailerModal').modal('show');
+					$('#theatreModal').modal('show');
 				}
 			}
 		});
 
-		movieInfo.append(trailerButton);
-
+		movieInfo.append(theatreButton);
+		var showTimes = $("<button>", {
+			type: "button",
+			class: "btn btn-info btn-md",
+			text: "Show Movie Times",
+			'data-target': 'showTimesModal',
+			'data-toggle': "modal",
+			on: {
+				click: function() {
+					$('#showTimesModal').modal('show');
+				}
+			}
+		});
+		movieInfo.append(showTimes);
 		var displayMap = $('<div>', {
 			class: 'displayMap',
 			id: 'map'
@@ -86,89 +99,56 @@ function Display() {
 }
 
 
-// var map;
-var infowindow;
 
-//needs to call function initMap because
+var markers = [];
+var map;
 
 function initMap() {
-
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(function(position) {
-			var pos = {
-				lat: position.coords.latitude,
-				lng: position.coords.longitude
-
-
-			};
-			console.log(pos)
-
-			var current = {
-				lat: pos.lat,
-				lng: pos.lng
-			};
-			// var current = navigator.geolocation;
-			yelp.yelpData(pos.lat, pos.lng);
-
-			var map = new google.maps.Map(document.getElementById('map'), {
-				zoom: 13,
-				center: current
-			});
-			var marker = new google.maps.Marker({
-				position: current,
-				map: map
-			});
-
-			map.setCenter(pos);
-		}, function() {
-			handleLocationError(true, infoWindow, map.getCenter());
-		});
-
-	} else {
-		// Browser doesn't support Geolocation
-		handleLocationError(false, infoWindow, map.getCenter());
-	}
-	// Create an array of alphabetical characters used to label the markers.
-	var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	var locations = [
-
-		{
-			lat: 33.6447809695316,
-			lng: -117.74444454841
-		},
-		{
-			lat: 33.6514285646533,
-			lng: -117.746069293683
-		},
-		{
-			lat: 33.620624,
-			lng: -117.699047
-		},
-		{
-			lat: 33.6220781,
-			lng: -117.684251
-		},
-		{
-			lat: 33.62161,
-			lng: -117.73214
-		},
-	];
-
-
-	var markers = locations.map(function(location, i) {
-		return new google.maps.Markers({
-			position: location,
-			label: labels[i % labels.length]
-		});
+	map = new google.maps.Map(document.getElementById('map'), {
+		zoom: 12,
+		center: {
+			lat: 33.6441211395679,
+			lng: -117.743128531307
+		}
 	});
-
-	// Add a marker clusterer to manage the markers.
-	var markerCluster = new MarkerClusterer(map, markers, {
-		imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
-	})
-
+	google.maps.event.addListener(map, 'click', function(event) {
+		placeMarker(event.latLng);
+	});
 }
 
+function drop(array) {
+	clearMarkers();
+	console.log(array);
+	for (var i = 0; i < array.length; i++) {
+		addMarkerWithTimeout(array[i], i * 200);
+	}
+}
+
+function addMarkerWithTimeout(position, timeout) {
+	window.setTimeout(function() {
+		markers.push(new google.maps.Marker({
+			position: position,
+			map: map,
+			icon: 'https://findicons.com/files/icons/2166/oxygen/128/applications_toys.png',
+			animation: google.maps.Animation.DROP
+		}));
+	}, timeout);
+}
+
+function clearMarkers() {
+	for (var i = 0; i < markers.length; i++) {
+		markers[i].setMap(null);
+	}
+	markers = [];
+}
+
+function placeMarker(location) {
+	clearMarkers();
+	var marker = new google.maps.Marker({
+		position: location,
+		map: map
+	});
+}
 
 
 function Movie() {
@@ -243,7 +223,8 @@ function Movie() {
 						console.log(cinema);
 						cinemaLocations.push(cinema);
 					}
-					return result;
+					console.log(cinemaLocations);
+					drop(cinemaLocations);
 				}
 			},
 			error: function(result) {
@@ -257,7 +238,8 @@ function Movie() {
 var movies = new Movie();
 
 function GetYelpData() {
-	this.yelpData = function(lat, long) {
+
+	this.yelpData = function(long, lat) {
 		$.ajax({
 			url: "http://danielpaschal.com/yelpproxy.php",
 			method: "GET",
@@ -265,8 +247,8 @@ function GetYelpData() {
 			data: {
 				api_key: "dYgZH0Ww1s8M1O3ERoy1zlO76NJdF5SCsCvZ7JcK2E7-9JQ2n2GFVQdNweumwfphSpCOKCB-GdhKe0kdNeepo7J91qE78gAJzDidYLCMGWEKaq6TK6kBS_Z2JvNcWnYx",
 				term: "mexican restaurant",
-				latitude: lat,
-				longitude: long,
+				latitude: 33.6441211395679,
+				longitude: -117.743128531307,
 				limit: 5,
 				radius: 8046
 			},
@@ -278,21 +260,12 @@ function GetYelpData() {
 			error: (response) => {
 				console.log(response);
 			}
-
 		})
 	};
 	this.getData = function(data) {
 		for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
-			this.addCoordintes(data.businesses[dataIndex]);
+			console.log(data.businesses[dataIndex].categories);
 		}
-	}
-	this.addCoordintes = function(data) {
-		let dataObj = {};
-		dataObj.lat = data.coordinates.latitude;
-		dataObj.lng = data.coordinates.longitude;
-		restarurantLocation.push(dataObj);
-		/*call the marker making function to set the different markers */
-		console.log(dataObj);
 	}
 
 }
