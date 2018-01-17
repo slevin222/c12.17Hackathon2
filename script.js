@@ -98,7 +98,6 @@ function initMap() {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
 
-
             };
             console.log(pos)
 
@@ -123,9 +122,21 @@ function initMap() {
         // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
     }
-    // Create an array of alphabetical characters used to label the markers.
-    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    var locations = [
+
+    function createMakers(results) {
+        for (var i = 0; i < results.length; i++) {
+            var coords = results[i];
+            var latLng = new google.maps.LatLng(coords[1], coords[0]);
+            var marker = new google.maps.Marker({
+                position: latLng,
+                map: map
+            });
+        }
+    }
+
+
+
+    var results = [
 
         {lat: 33.6447809695316, lng: -117.74444454841},
         {lat: 33.6514285646533, lng: -117.746069293683},
@@ -134,17 +145,9 @@ function initMap() {
         {lat: 33.62161, lng: -117.73214},
     ];
 
+    createMakers(results);
 
-    var markers = locations.map(function(location, i) {
-        return new google.maps.Markers({
-            position: location,
-            label: labels[i % labels.length]
-        });
-    });
 
-// Add a marker clusterer to manage the markers.
-    var markerCluster = new MarkerClusterer(map, markers,
-        {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'})
 
 }
 
