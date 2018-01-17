@@ -1,16 +1,16 @@
 $(document).ready(initializeApp);
 
 function initializeApp() {
-    $(".btn-primary").click(changeScreen);
-    $("#container").hide();
+	$(".btn-primary").click(changeScreen);
+	$("#container").hide();
 }
 
-function changeScreen(){
-    $("#introPage").fadeOut(1000);
-    display = new Display();
-    display.init();
-    initMap();
-    $("#container").fadeIn(1000);
+function changeScreen() {
+	$("#introPage").fadeOut(1000);
+	display = new Display();
+	display.init();
+	initMap();
+	$("#container").fadeIn(1000);
 }
 
 function Display() {
@@ -96,7 +96,27 @@ function Display() {
 			class: 'foodInfo'
 		});
 		container.append(foodInfo);
-
+		var foodInput = $('<input>', {
+			type: "text",
+			name: "genre",
+			class: "foodInput"
+		});
+		var locationInput = $('<input>', {
+			type: "text",
+			name: "zipCode",
+			class: "locationInput",
+			placeholder: "Input Zipcode"
+		});
+		var foodButton = $('<input>', {
+			type: "button",
+			click: function() {
+				var term = $('.foodInput').val();
+				var location = $('.locationInput').val();
+				yelp.yelpData(term, location);
+			},
+			value: "Submit"
+		})
+		foodInfo.append(foodInput, locationInput, foodButton)
 		var title = $('<div>', {
 			class: 'footer'
 		});
@@ -124,60 +144,60 @@ function initMap() {
 }
 
 
-    // if (navigator.geolocation) {
-    //     navigator.geolocation.getCurrentPosition(function(position) {
-    //         var pos = {
-    //             lat: position.coords.latitude,
-    //             lng: position.coords.longitude
-    //
-    //         };
-    //         console.log(pos)
-    //
-    //         var current = {lat: pos.lat, lng: pos.lng};
-    //         // var current = navigator.geolocation;
-    //
-    //         var map = new google.maps.Map(document.getElementById('map'), {
-    //             zoom: 13,
-    //             center: current
-    //         });
-    //         var marker = new google.maps.Marker({
-    //             position: current,
-    //             map: map
-    //         });
-    //
-    //         map.setCenter(pos);
-    //     }, function() {
-    //         handleLocationError(true, infoWindow, map.getCenter());
-    //     });
-    //
-    // } else {
-    //     // Browser doesn't support Geolocation
-    //     handleLocationError(false, infoWindow, map.getCenter());
-    // }
-    //
-    // function createMakers(results) {
-    //     for (var i = 0; i < results.length; i++) {
-    //         var coords = results[i];
-    //         var latLng = new google.maps.LatLng(coords[1], coords[0]);
-    //         var marker = new google.maps.Marker({
-    //             position: latLng,
-    //             map: map
-    //         });
-    //     }
-    // }
-    //
-    //
-    //
-    // var results = [
-    //
-    //     {lat: 33.6447809695316, lng: -117.74444454841},
-    //     {lat: 33.6514285646533, lng: -117.746069293683},
-    //     {lat: 33.620624, lng: -117.699047},
-    //     {lat: 33.6220781, lng: -117.684251},
-    //     {lat: 33.62161, lng: -117.73214},
-    // ];
-    //
-    // createMakers(results);
+// if (navigator.geolocation) {
+//     navigator.geolocation.getCurrentPosition(function(position) {
+//         var pos = {
+//             lat: position.coords.latitude,
+//             lng: position.coords.longitude
+//
+//         };
+//         console.log(pos)
+//
+//         var current = {lat: pos.lat, lng: pos.lng};
+//         // var current = navigator.geolocation;
+//
+//         var map = new google.maps.Map(document.getElementById('map'), {
+//             zoom: 13,
+//             center: current
+//         });
+//         var marker = new google.maps.Marker({
+//             position: current,
+//             map: map
+//         });
+//
+//         map.setCenter(pos);
+//     }, function() {
+//         handleLocationError(true, infoWindow, map.getCenter());
+//     });
+//
+// } else {
+//     // Browser doesn't support Geolocation
+//     handleLocationError(false, infoWindow, map.getCenter());
+// }
+//
+// function createMakers(results) {
+//     for (var i = 0; i < results.length; i++) {
+//         var coords = results[i];
+//         var latLng = new google.maps.LatLng(coords[1], coords[0]);
+//         var marker = new google.maps.Marker({
+//             position: latLng,
+//             map: map
+//         });
+//     }
+// }
+//
+//
+//
+// var results = [
+//
+//     {lat: 33.6447809695316, lng: -117.74444454841},
+//     {lat: 33.6514285646533, lng: -117.746069293683},
+//     {lat: 33.620624, lng: -117.699047},
+//     {lat: 33.6220781, lng: -117.684251},
+//     {lat: 33.62161, lng: -117.73214},
+// ];
+//
+// createMakers(results);
 
 
 
@@ -194,7 +214,7 @@ function addMarkerWithTimeout(position, timeout) {
 		markers.push(new google.maps.Marker({
 			position: position,
 			map: map,
-			icon: 'https://findicons.com/files/icons/2166/oxygen/128/applications_toys.png',
+			// icon: 'https://findicons.com/files/icons/2166/oxygen/128/applications_toys.png',
 			animation: google.maps.Animation.DROP
 		}));
 	}, timeout);
@@ -326,16 +346,17 @@ var movies = new Movie();
 
 function GetYelpData() {
 
-	this.yelpData = function(long, lat) {
+	this.yelpData = function(term, location) {
 		$.ajax({
 			url: "http://danielpaschal.com/yelpproxy.php",
 			method: "GET",
 			dataType: "JSON",
 			data: {
 				api_key: "dYgZH0Ww1s8M1O3ERoy1zlO76NJdF5SCsCvZ7JcK2E7-9JQ2n2GFVQdNweumwfphSpCOKCB-GdhKe0kdNeepo7J91qE78gAJzDidYLCMGWEKaq6TK6kBS_Z2JvNcWnYx",
-				term: "mexican restaurant",
-				latitude: 33.6441211395679,
-				longitude: -117.743128531307,
+				term: term,
+				latitude: location.lat,
+				longitude: location.lng,
+				location: location,
 				limit: 5,
 				radius: 8046
 			},
@@ -350,12 +371,23 @@ function GetYelpData() {
 		})
 	};
 	this.getData = function(data) {
+		var restaurantLocation = [];
 		for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
-			console.log(data.businesses[dataIndex].categories);
+			let restaurant = {
+				lat: data.businesses[dataIndex].coordinates.latitude,
+				lng: data.businesses[dataIndex].coordinates.longitude
+			};
+			console.log("this is single" + restaurant);
+			restaurantLocation.push(restaurant);
 		}
+		console.log("the whole" + restaurantLocation);
+		drop(restaurantLocation);
 	}
-
 }
-
+var testObj = {
+	lat: 33.6441211395679,
+	lng: -117.743128531307
+}
 var yelp = new GetYelpData();
-movies.cinemaDataSearch();
+yelp.yelpData("sushi", testObj);
+movies.cinemaDataSearch(testObj);
