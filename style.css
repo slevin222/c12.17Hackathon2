@@ -71,7 +71,7 @@ p{
 }
 
 .movieInfo{
-    height: 40%;
+    height: 44%;
     width: 25%;
     background-color: lightgrey;
     margin: .5% 0 0 0;
@@ -82,10 +82,13 @@ p{
 .movieInfoTitle{
     height: 10%;
     width: 100%;
+    font-size: 1.8em;
+    text-align: center;
 }
 .movieInfoSyn{
-    height: 40%;
+    height: 44%;
     width: 100%;
+    font-size: 1.2em;
 }
 .movieInfoPics{
     height: 35%;
@@ -94,25 +97,20 @@ p{
 
 
 .displayMap{
-    height: 40%;
+    height: 44%;
     width: 48%;
     background-color: darkblue;
     margin: .5% 0 0 0;
 }
 
 .foodInfo {
-    height: 40%;
+    height: 44%;
     width: 25%;
     background-color: lightgrey;
     margin: .5% 0 0 0;
 }
 
-.footer{
-    height: 4%;
-    width: 100%;
-    background-color: #2e6da4;
 
-}
 
 #map{
 
