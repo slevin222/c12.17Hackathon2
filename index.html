@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Hackathon</title>
     <link type="text/css" rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery.min.js"></script>
@@ -9,6 +10,7 @@
           type="text/css"/>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="script.js"></script>
+
     <script type="text/javascript"
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5LjL0V_jf2iCijhNQ1OELgdL_ru60088&libraries=places"></script>
 </head>
@@ -58,6 +60,31 @@
                 </div>
             </div>
         </div>
+
+      </div>
+
+      <!--youtube-->
+      <div class="bs-example">
+        <!--Button HTML (to Trigger Modal) -->
+        <a href="#myModal" class="btn btn-lg btn-primary" data-toggle="modal">Trailer</a>
+
+        <!--Modal HTML -->
+        <div id="myModal" class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">YouTube Video</h4>
+              </div>
+              <div class="modal-body">
+                <iframe id="video" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     </div>
 </div>
 </body>
