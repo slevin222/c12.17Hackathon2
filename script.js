@@ -1,16 +1,16 @@
 $(document).ready(initializeApp);
 
 function initializeApp() {
-    $(".btn-primary").click(changeScreen);
-    $("#container").hide();
+	$(".btn-primary").click(changeScreen);
+	$("#container").hide();
 }
 
-function changeScreen(){
-    $("#introPage").fadeOut(1000);
-    display = new Display();
-    display.init();
-    initMap();
-    $("#container").fadeIn(1000);
+function changeScreen() {
+	$("#introPage").fadeOut(1000);
+	display = new Display();
+	display.init();
+	initMap();
+	$("#container").fadeIn(1000);
 }
 
 function Display() {
@@ -96,7 +96,27 @@ function Display() {
 			class: 'foodInfo'
 		});
 		container.append(foodInfo);
-
+		var foodInput = $('<input>', {
+			type: "text",
+			name: "genre",
+			class: "foodInput"
+		});
+		var locationInput = $('<input>', {
+			type: "text",
+			name: "zipCode",
+			class: "locationInput",
+			placeholder: "Input Zipcode"
+		});
+		var foodButton = $('<input>', {
+			type: "button",
+			click: function() {
+				var term = $('.foodInput').val();
+				var location = $('.locationInput').val();
+				yelp.yelpData(term, location);
+			},
+			value: "Submit"
+		})
+		foodInfo.append(foodInput, locationInput, foodButton)
 		var title = $('<div>', {
 			class: 'footer'
 		});
@@ -122,8 +142,8 @@ function initMap() {
         clearMarkers();
 	    placeMarker(event.latLng);
 	});
-    drop([{'lat': 33.6441211395679, 'lng': -117.743128531307}]);
 
+    drop([{'lat': 33.6441211395679, 'lng': -117.743128531307}]);
 }
 
 // function initialDrop(zip){
@@ -256,17 +276,17 @@ function Movie() {
 }
 
 function GetYelpData() {
-
-	this.yelpData = function(lat, lng) {
+	this.yelpData = function(term, location) {
 		$.ajax({
 			url: "http://danielpaschal.com/yelpproxy.php",
 			method: "GET",
 			dataType: "JSON",
 			data: {
 				api_key: "dYgZH0Ww1s8M1O3ERoy1zlO76NJdF5SCsCvZ7JcK2E7-9JQ2n2GFVQdNweumwfphSpCOKCB-GdhKe0kdNeepo7J91qE78gAJzDidYLCMGWEKaq6TK6kBS_Z2JvNcWnYx",
-				term: "mexican restaurant",
-				latitude: lat,
-				longitude: lng,
+				term: term,
+				latitude: location.lat,
+				longitude: location.lng,
+				location: location,
 				limit: 5,
 				radius: 8046
 			},
@@ -281,11 +301,23 @@ function GetYelpData() {
 		})
 	};
 	this.getData = function(data) {
+		var restaurantLocation = [];
 		for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
-			console.log(data.businesses[dataIndex].categories);
+			let restaurant = {
+				lat: data.businesses[dataIndex].coordinates.latitude,
+				lng: data.businesses[dataIndex].coordinates.longitude
+			};
+			console.log("this is single" + restaurant);
+			restaurantLocation.push(restaurant);
 		}
+		console.log("the whole" + restaurantLocation);
+		drop(restaurantLocation);
 	}
-
 }
-var movies = new Movie();
+var testObj = {
+	lat: 33.6441211395679,
+	lng: -117.743128531307
+}
 var yelp = new GetYelpData();
+yelp.yelpData("sushi", testObj);
+movies.cinemaDataSearch(testObj);
