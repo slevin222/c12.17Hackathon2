@@ -85,6 +85,31 @@ function Display() {
 				}
 			}
 		});
+
+		// trailer
+
+
+		var trailerButton = $("<button>", {
+			type: "button",
+			class: "btn btn-info btn-md",
+            text: "Trailer",
+            'data-target': 'trailerModal',
+            'data-toggle': "modal",
+			on: {
+				click: function(){
+                    $('#trailerModal').modal('show');
+				}
+			}
+		});
+        movieInfo.append(trailerButton);
+
+		//
+
+
+
+
+
+
 		movieInfo.append(showTimes);
 		var displayMap = $('<div>', {
 			class: 'displayMap',
@@ -259,21 +284,23 @@ function Movie() {
 
 					////// MOVIE TRAILER ///////
 
-
-                    console.log(result.movies[0].trailers[0].trailer_files[0].url);
+                    // console.log(result.movies[0].trailers[0].trailer_files[0].url);
                     var trailer = result.movies[0].trailers[0].trailer_files[0].url;
-                    // trailer = $('#jumanji').attr('src');
+
+					// console.log(movieTrailer);
+                    //
+                    // for(var movieTrailerIndex = 0; movieTrailerIndex < movieTrailer.length; movieTrailerIndex++){
+
+					// }
+
+                    trailer = $('#jumanji').attr('src');
                     $("#myModal").on('hide.bs.modal', function(){
                         $("#jumanji").attr('src', '');
                     });
                     $("#myModal").on('show.bs.modal', function(){
                         $("#jumanji").attr('src', trailer);
                     });
-
-                    var str = String(trailer);
-                    var res = str.replace("watch?v=", "embed/");
-                    console.log(res);
-
+                    // console.log(res);
 
                     /////
 
@@ -283,6 +310,7 @@ function Movie() {
 						currentMovie.css({
 							'background-image': "url('" + currentMovie[0].movie.poster_image + "')"
 						});
+
 						currentMovie.on('mouseover', function() {
 							$('.movieInfoTitle').text(this.movie.title);
 							$('.movieInfoSyn').text(this.movie.synopsis);
@@ -290,9 +318,18 @@ function Movie() {
 							for (var i = 0; i < this.movie.scene_images.length && i < 3; i++) {
 								$('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
 							}
-							// var url = this.movie.trailers[0].trailer_files[0].url.replace("watch?v=", "embed/");
-							// $('#video-modal').empty().attr('src', url);
+							var movieTrailer = result.movies;
+							// var movieTrailer = movie;
+							console.log(movieTrailer);
+							var trailer = movieTrailer[movieDataIndex].trailers[0].trailer_files[0].url;
+							var str = String(trailer);
+
+                        	var res = str.replace("watch?v=", "embed/");
+                    		console.log(res);
+                    	$('#video').attr('src', url);
 						})
+
+
 					}
 				}
 			},
