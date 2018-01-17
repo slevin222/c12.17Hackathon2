@@ -143,7 +143,7 @@ let display = {
 		let foodInput = $('<input>', {
 			type: "text",
 			name: "genre",
-            placeholder: "Enter food type",
+			placeholder: "Enter food type",
 			class: "foodInput"
 		});
 
@@ -155,7 +155,7 @@ let display = {
 		// });
 		let foodButton = $('<input>', {
 			type: "button",
-            class: "btn btn-info btn-md",
+			class: "btn btn-info btn-md",
 			click: function() {
 				let term = $('.foodInput').val();
 				placeMarker(currentLocation, term);
@@ -194,7 +194,7 @@ function initMap() {
 		// 		let term = $('.foodInput').val();
 		// 		placeMarker(event.latLng, term);
 		// 	})
-		$('.foodPlace').empty();
+		$('#foodPlace').text('');
 		let term = $('.foodInput').val();
 		clearMarkers();
 		placeMarker(event.latLng, term);
@@ -486,7 +486,11 @@ function GetYelpData() {
 			//	name = name.link(data.businesses[dataIndex].url)
 			console.log("this is single" + restaurant);
 			restaurantLocation.push(restaurant);
-			let aTag = $("<a>").attr("href", data.businesses[dataIndex].url).text(name);
+			let aTag = $("<a>", {
+				"href": data.businesses[dataIndex].url,
+				"target": '_blank',
+				text: name
+			});
 			$('#foodPlace' + (dataIndex + 1)).append(aTag);
 		}
 		console.log("the whole" + restaurantLocation);
