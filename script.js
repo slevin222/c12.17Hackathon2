@@ -116,6 +116,64 @@ function initMap() {
 	});
 }
 
+
+    // if (navigator.geolocation) {
+    //     navigator.geolocation.getCurrentPosition(function(position) {
+    //         var pos = {
+    //             lat: position.coords.latitude,
+    //             lng: position.coords.longitude
+    //
+    //         };
+    //         console.log(pos)
+    //
+    //         var current = {lat: pos.lat, lng: pos.lng};
+    //         // var current = navigator.geolocation;
+    //
+    //         var map = new google.maps.Map(document.getElementById('map'), {
+    //             zoom: 13,
+    //             center: current
+    //         });
+    //         var marker = new google.maps.Marker({
+    //             position: current,
+    //             map: map
+    //         });
+    //
+    //         map.setCenter(pos);
+    //     }, function() {
+    //         handleLocationError(true, infoWindow, map.getCenter());
+    //     });
+    //
+    // } else {
+    //     // Browser doesn't support Geolocation
+    //     handleLocationError(false, infoWindow, map.getCenter());
+    // }
+    //
+    // function createMakers(results) {
+    //     for (var i = 0; i < results.length; i++) {
+    //         var coords = results[i];
+    //         var latLng = new google.maps.LatLng(coords[1], coords[0]);
+    //         var marker = new google.maps.Marker({
+    //             position: latLng,
+    //             map: map
+    //         });
+    //     }
+    // }
+    //
+    //
+    //
+    // var results = [
+    //
+    //     {lat: 33.6447809695316, lng: -117.74444454841},
+    //     {lat: 33.6514285646533, lng: -117.746069293683},
+    //     {lat: 33.620624, lng: -117.699047},
+    //     {lat: 33.6220781, lng: -117.684251},
+    //     {lat: 33.62161, lng: -117.73214},
+    // ];
+    //
+    // createMakers(results);
+
+
+
 function drop(array) {
 	clearMarkers();
 	console.log(array);
@@ -134,6 +192,7 @@ function addMarkerWithTimeout(position, timeout) {
 		}));
 	}, timeout);
 }
+
 
 function clearMarkers() {
 	for (var i = 0; i < markers.length; i++) {
