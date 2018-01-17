@@ -5,7 +5,10 @@ function initializeApp() {
     $("#container").hide();
 }
 
-function changeScreen() {
+
+function changeScreen(){
+	// var zipCode = $(".form-control").val();
+	// console.log(zipCode);
     $("#introPage").fadeOut(1000);
     display = new Display();
     display.init();
