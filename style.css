@@ -93,6 +93,15 @@ p{
     height: 35%;
     width: 100%;
 }
+.movie button{
+    position: relative;
+    display:none;
+    top: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    border-radius: 0;
+}
 
 
 .displayMap{
@@ -122,7 +131,11 @@ p{
 }
 
 
-
+#showBtn,
+#timesBtn{
+    padding: 1% 2%;
+    font-size: 1.5rem;
+}
 
 
 

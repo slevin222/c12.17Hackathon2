@@ -1,36 +1,58 @@
 $(document).ready(initializeApp);
 
 function initializeApp() {
-    $(".btn-primary").click(changeScreen);
-    $("#container").hide();
+	$(".btn-primary").click(changeScreen);
+	$("#container").hide();
 }
 
 
-function changeScreen(){
+function changeScreen() {
 	// var zipCode = $(".form-control").val();
 	// console.log(zipCode);
-    $("#introPage").fadeOut(1000);
-    display.init();
-    initMap();
-    $("#container").fadeIn(1000);
+	$("#introPage").fadeOut(1000);
+	display.init();
+	initMap();
+	$("#container").fadeIn(1000);
 }
 
-let display =  {
+let display = {
 
-	foodArray : [
-	    './images/Pizza.svg', 
-        './images/Noodles.svg', 
-        './images/Taco.svg', 
-        './images/Sushi.svg', 
-        './images/Burger.svg', 
-        './images/Coffee.svg', 
-        './images/Beer.svg'],
+	//this.foodArray = ['./images/Pizza.svg', './images/Noodles.svg', './images/Taco.svg', './images/Sushi.svg', './images/Burger.svg', './images/Coffee.svg', './images/Beer.svg'];
+	foodObject: [{
+			name: "pizza",
+			img: './images/Pizza.svg'
+		},
+		{
+			name: "noodles",
+			img: './images/Noodles.svg'
+		},
+		{
+			name: "mexican",
+			img: './images/Taco.svg'
+		},
+		{
+			name: "sushi",
+			img: './images/Sushi.svg'
+		},
+		{
+			name: "burger",
+			img: './images/Burger.svg'
+		},
+		{
+			name: "coffee",
+			img: './images/Coffee.svg'
+		},
+		{
+			name: "bear",
+			img: './images/Beer.svg'
+		}
+	],
 
-	init : function() {
+	init: function() {
 		this.display();
 	},
 
-	display : function() {
+	display: function() {
 		container = $("#container");
 
 		for (let i = 1; i < 11; i++) {
@@ -42,14 +64,17 @@ let display =  {
 		}
 		movies.movieDataFrontPage();
 
-		for (let x = 1; x < 8; x++) {
-			let foodRow = $('<div>', {
-				class: 'foodType' + x
+		for (var x = 1; x < 8; x++) {
+			var foodRow = $('<div>', {
+				class: 'foodType' + x,
+				id: 'foodType',
+				click: function() {
+					getTerm();
+				}
 			});
-			foodRow.css('background-image', "url('" + this.foodArray[x - 1] + "')");
+			foodRow.css('background-image', "url('" + this.foodObject[x - 1].img + "')");
 			container.append(foodRow);
 		}
-
 		let movieInfo = $('<div>', {
 			class: 'movieInfo',
 		});
@@ -72,6 +97,7 @@ let display =  {
 			type: "button",
 			class: "btn btn-info btn-md",
 			text: "Show Theatres",
+            id: "showBtn",
 			'data-target': 'theatreModal',
 			'data-toggle': "modal",
 			on: {
@@ -86,6 +112,7 @@ let display =  {
 			type: "button",
 			class: "btn btn-info btn-md",
 			text: "Show Movie Times",
+            id: "timesBtn",
 			'data-target': 'showTimesModal',
 			'data-toggle': "modal",
 			on: {
@@ -95,132 +122,146 @@ let display =  {
 			}
 		});
 
-		// trailer
+        movieInfo.append(showTimes);
 
-		let trailerButton = $("<button>", {
-			type: "button",
-			class: "btn btn-info btn-md",
-            text: "Trailer",
-            'data-target': 'trailerModal',
-            'data-toggle': "modal",
-			on: {
-				click: function(){
-                    $('#trailerModal').modal('show');
-				}
-			}
-		});
-        movieInfo.append(trailerButton);
-        
-		movieInfo.append(showTimes);
 		let displayMap = $('<div>', {
 			class: 'displayMap',
 			id: 'map'
 		});
 		container.append(displayMap);
-
 		let foodInfo = $('<div>', {
 			class: 'foodInfo'
 		});
 		container.append(foodInfo);
+		for (let h = 1; h < 6; h++) {
+			let foodPlace = $('<div>', {
+				class: "foodPlace" + h,
+				id: "foodPlace"
+			})
+			foodInfo.append(foodPlace);
+		}
 		let foodInput = $('<input>', {
 			type: "text",
 			name: "genre",
 			class: "foodInput"
 		});
-		let locationInput = $('<input>', {
-			type: "text",
-			name: "zipCode",
-			class: "locationInput",
-			placeholder: "Input Zipcode"
-		});
+		// let locationInput = $('<input>', {
+		// 	type: "text",
+		// 	name: "zipCode",
+		// 	class: "locationInput",
+		// 	placeholder: "Input Zipcode"
+		// });
 		let foodButton = $('<input>', {
 			type: "button",
 			click: function() {
 				let term = $('.foodInput').val();
-				let location = $('.locationInput').val();
-				yelp.yelpData(term, location);
+				placeMarker(currentLocation, term);
 			},
 			value: "Submit"
 		});
-		foodInfo.append(foodInput, locationInput, foodButton);
+		foodInfo.append(foodInput, foodButton);
 		let title = $('<div>', {
 			class: 'footer'
 		});
 		container.append(title);
-	}
-};
 
-let markers = [];
-let map;
+
+	}
+}
+
+// function getTerm() {
+
+
+
+var markers = [];
+var map;
+var currentLocation;
+
 
 function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        center: {
-            lat: 33.6441211395679,
-            lng: -117.743128531307
-        }
-    });
-    google.maps.event.addListener(map, 'click', function (event) {
-        clearMarkers();
-        placeMarker(event.latLng);
-    });
+	map = new google.maps.Map(document.getElementById('map'), {
+		zoom: 12,
+		center: {
+			lat: 33.6441211395679,
+			lng: -117.743128531307
+		}
+	});
+	google.maps.event.addListener(map, 'click', function(event) {
+		// 	$('.foodButton').on('click', function() {
+		// 		let term = $('.foodInput').val();
+		// 		placeMarker(event.latLng, term);
+		// 	})
+		$('.foodPlace').text('');
+		let term = $('.foodInput').val();
+		clearMarkers();
+		placeMarker(event.latLng, term);
+		console.log("this is" + event.latLng);
+		currentLocation = event.latLng;
+
+
+	});
+
+
+	// drop([{lat: 33.6441211395679, lng: -117.743128531307}]);
 }
 
 function dropCinema(array) {
     console.log(array);
     for (let i = 0; i < array.length; i++) {
-        addCinemaWithTimeout(array[i], i * 200);
+        (function () {
+            let marker = new google.maps.Marker({
+                position: array[i],
+                map: map,
+                icon: './images/Cinema-Icon.png',
+                animation: google.maps.Animation.DROP
+            });
+            markers.push(marker);
+            google.maps.event.addDomListener(marker, 'click', function() {
+                window.location.href = marker.url;
+            });
+        })(markers[i]);
     }
-}
-
-function addCinemaWithTimeout(position, timeout) {
-    window.setTimeout(function () {
-        markers.push(new google.maps.Marker({
-            position: position,
-            map: map,
-            icon: './images/Cinema-Icon.png',
-            animation: google.maps.Animation.DROP
-        }));
-    }, timeout);
 }
 
 function dropRestaurant(array) {
     console.log(array);
     for (let i = 0; i < array.length; i++) {
-        addRestaurantWithTimeout(array[i], i * 200);
+        (function () {
+            let marker = new google.maps.Marker({
+                position: array[i],
+                map: map,
+                icon: './images/Restaurant-Icon.png',
+                animation: google.maps.Animation.DROP
+            });
+            markers.push(marker);
+            google.maps.event.addDomListener(marker, 'click', function() {
+                // $('.movieInfo').
+            });
+        })(markers[i]);
     }
-}
-
-function addRestaurantWithTimeout(position, timeout) {
-    window.setTimeout(function () {
-        markers.push(new google.maps.Marker({
-            position: position,
-            map: map,
-            icon: './images/Restaurant-Icon.png',
-            animation: google.maps.Animation.DROP
-        }));
-    }, timeout);
 }
 
 function clearMarkers() {
-    for (let i = 0; i < markers.length; i++) {
-        markers[i].setMap(null);
-    }
-    markers = [];
+	for (let i = 0; i < markers.length; i++) {
+		markers[i].setMap(null);
+	}
+	markers = [];
 }
 
 function placeMarker(location, foodType) {
-    clearMarkers();
-    markers.push(new google.maps.Marker({
-        position: location,
-        map: map,
-        animation: google.maps.Animation.DROP
-    }));
-    let locString = location.lat() + "," + location.lng();
-    let yelpLocation = {lat: location.lat(), lng: location.lng()};
-    movies.cinemaDataSearch(locString);
-    yelp.yelpData(foodType, yelpLocation);
+	clearMarkers();
+	markers.push(new google.maps.Marker({
+		position: location,
+		map: map,
+		animation: google.maps.Animation.DROP
+	}));
+	let locString = location.lat() + "," + location.lng();
+	let yelpLocation = {
+		lat: location.lat(),
+		lng: location.lng()
+	};
+	movies.cinemaDataSearch(locString);
+	yelp.yelpData(foodType, yelpLocation);
 }
 
 let movies = {
@@ -245,28 +286,46 @@ let movies = {
                     console.log("We have empty results or something went wrong");
                 }  else {
                     console.log(result);
-                    trailer = $('#jumanji').attr('src');
-                    $("#myModal").on('hide.bs.modal', function () {
-                        $("#jumanji").attr('src', '');
-                    });
-                    $("#myModal").on('show.bs.modal', function () {
-                        $("#jumanji").attr('src', trailer);
-                    });
-
                     for (let movieDataIndex = 0; movieDataIndex < 10; movieDataIndex++) {
                         let currentMovie = $('#movie' + (movieDataIndex + 1));
                         currentMovie[0].movie = result.movies[movieDataIndex];
                         currentMovie.css({
                             'background-image': "url('" + currentMovie[0].movie.poster_image + "')"
                         });
+                        // Creates Button
+                        let trailerButton = $("<button>", {
+                            id : '#moviebutton'+(movieDataIndex+1),
+                            type: "button",
+                            class: "btn btn-default btn-md",
+                            text: "Trailer",
+                            'data-target': 'trailerModal',
+                            'data-toggle': "modal",
+                            on: {
+                                click: function(){
+                                    $('#trailerModal').modal('show');
+                                }
+                            }
+                        });
+                        currentMovie.append(trailerButton);
 
-                        currentMovie.on('mouseover', function () {
+                        // Mouseover to show button
+                        currentMovie.on('mouseenter', function () {
+                            $(this).find("button").show();
+                        });
+                        currentMovie.on('mouseleave', function () {
+                            $(this).find("button").hide();
+                        });
+
+                        // Shows Movie Data on Click
+                        currentMovie.on('click', function () {
                             $('.movieInfoTitle').text(this.movie.title);
                             $('.movieInfoSyn').text(this.movie.synopsis);
                             $('.movieInfoPics').empty();
                             for (let i = 0; i < this.movie.scene_images.length && i < 3; i++) {
                                 $('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
                             }
+                            movies.currentMovieId = this.movie.id;
+                            console.log(this.movie.id);
 
                             ////// MOVIE TRAILER ///////
                             let movieTrailer = result.movies;
@@ -274,17 +333,17 @@ let movies = {
                             let str = String(trailer);
 
                             let res = str.replace("watch?v=", "embed/");
-                            // let autoplay = res + "?autoplay=1";
-                            // console.log(autoplay)
-                            // console.log(res);
+
                             $('#video').attr('src', res);
                         });
                         currentMovie.on('click', function () {
                             movies.currentMovieId = this.movie.id;
                             console.log(this.movie.id);
+
+                            console.log(str);
+                            $('#video').attr('src', str);
+
                         });
-
-
                     }
                 }
             },
@@ -389,49 +448,49 @@ let movies = {
 };
 
 function GetYelpData() {
-    this.yelpData = function (term, location) {
-        $.ajax({
-            url: "http://danielpaschal.com/yelpproxy.php",
-            method: "GET",
-            dataType: "JSON",
-            data: {
-                api_key: "dYgZH0Ww1s8M1O3ERoy1zlO76NJdF5SCsCvZ7JcK2E7-9JQ2n2GFVQdNweumwfphSpCOKCB-GdhKe0kdNeepo7J91qE78gAJzDidYLCMGWEKaq6TK6kBS_Z2JvNcWnYx",
-                term: term,
-                latitude: location.lat,
-                longitude: location.lng,
-                location: location,
-                limit: 5,
-                radius: 8046
-            },
-            success: (response) => {
-                console.log(response);
-                let dataObj = response;
-                this.getData(dataObj);
-            },
-            error: (response) => {
-                console.log(response);
-            }
-        })
-    };
-    this.getData = function (data) {
-        let restaurantLocation = [];
-        for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
-            let restaurant = {
-                lat: data.businesses[dataIndex].coordinates.latitude,
-                lng: data.businesses[dataIndex].coordinates.longitude
-            };
-            console.log("this is single" + restaurant);
-            restaurantLocation.push(restaurant);
-        }
-        console.log("the whole" + restaurantLocation);
-        dropRestaurant(restaurantLocation);
-    }
+	this.yelpData = function(term, location) {
+		$.ajax({
+			url: "http://danielpaschal.com/yelpproxy.php",
+			method: "GET",
+			dataType: "JSON",
+			data: {
+				api_key: "dYgZH0Ww1s8M1O3ERoy1zlO76NJdF5SCsCvZ7JcK2E7-9JQ2n2GFVQdNweumwfphSpCOKCB-GdhKe0kdNeepo7J91qE78gAJzDidYLCMGWEKaq6TK6kBS_Z2JvNcWnYx",
+				term: term,
+				latitude: location.lat,
+				longitude: location.lng,
+				location: location,
+				limit: 5,
+				radius: 8046
+			},
+			success: (response) => {
+				console.log(response);
+				let dataObj = response;
+				this.getData(dataObj);
+			},
+			error: (response) => {
+				console.log(response);
+			}
+		})
+	};
+	this.getData = function(data) {
+		let restaurantLocation = [];
+		for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
+			let restaurant = {
+				lat: data.businesses[dataIndex].coordinates.latitude,
+				lng: data.businesses[dataIndex].coordinates.longitude
+			};
+			let name = data.businesses[dataIndex].name;
+			console.log("this is single" + restaurant);
+			restaurantLocation.push(restaurant);
+			$('.foodPlace' + (dataIndex + 1)).text(name);
+		}
+		console.log("the whole" + restaurantLocation);
+		dropRestaurant(restaurantLocation);
+	}
 }
-
-
 let testObj = {
-    lat: 33.6441211395679,
-    lng: -117.743128531307
+	lat: 33.6441211395679,
+	lng: -117.743128531307
 };
 let yelp = new GetYelpData();
 // yelp.yelpData("sushi", testObj.lat, testObj.lng);
