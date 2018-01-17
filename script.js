@@ -34,7 +34,7 @@ function Display() {
 			});
 			container.append(movieRow);
 		}
-		movies.movieDataFrontPage();
+		this.movies.movieDataFrontPage();
 
 		for (var x = 1; x < 8; x++) {
 			var foodRow = $('<div>', {
@@ -90,7 +90,6 @@ function Display() {
 		});
 
 		// trailer
-
 
 		var trailerButton = $("<button>", {
 			type: "button",
@@ -543,6 +542,7 @@ function Movie() {
         lng: -117.743128531307
     };
     let yelp = new GetYelpData();
+    var movies = new Movie();
 // yelp.yelpData("sushi", testObj.lat, testObj.lng);
 // movies.cinemaDataSearch(testObj);
 }
