@@ -1,62 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Hackathon</title>
     <link type="text/css" rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery.min.js"></script>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"
+          type="text/css"/>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="script.js"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5LjL0V_jf2iCijhNQ1OELgdL_ru60088&libraries=places"></script>
-  </head>
-  <body>
-  <div id="introPage">
-     <div id="backGround"></div>
-        <div id="enter">
-          <p>We help you easily plan the night ! - Find a Theatre with Show Times and a Restaurant near you. - Just enter the nearest zip code for all options </p>
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Zip Code" name="search">
-              <div class="input-group-btn">
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5LjL0V_jf2iCijhNQ1OELgdL_ru60088&libraries=places"></script>
+</head>
+<body>
+<div id="introPage">
+    <div id="backGround"></div>
+    <div id="enter">
+        <p>We help you easily plan the night ! - Find a Theatre with Show Times and a Restaurant near you. - Just enter
+            the nearest zip code for all options </p>
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Zip Code" name="search">
+            <div class="input-group-btn">
                 <button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-              </div>
             </div>
         </div>
-  </div>
-    <div id="container">
+    </div>
+</div>
+<div id="container">
     <div id="theatreModal" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content" >
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="movie-title">Locations</h4>
-          </div>
-          <div class="modal-body">
-            <p class="responseText"></p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-      <div id="showTimesModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
-          <div class="modal-content" >
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="movie-title">Movie Times</h4>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="movie-title">Locations</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="responseText"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
             </div>
-            <div class="modal-body">
-              <p class="responseText"></p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </body>
+    <div id="showTimesModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="movie-title">Movie Times</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="responseText"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
 </html>
