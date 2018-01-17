@@ -1,16 +1,19 @@
 $(document).ready(initializeApp);
 
 function initializeApp() {
-	$(".btn-primary").click(changeScreen);
-	$("#container").hide();
+    $(".btn-primary").click(changeScreen);
+    $("#container").hide();
 }
 
-function changeScreen() {
-	$("#introPage").fadeOut(1000);
-	display = new Display();
-	display.init();
-	initMap();
-	$("#container").fadeIn(1000);
+
+function changeScreen(){
+	// var zipCode = $(".form-control").val();
+	// console.log(zipCode);
+    $("#introPage").fadeOut(1000);
+    display = new Display();
+    display.init();
+    initMap();
+    $("#container").fadeIn(1000);
 }
 
 function Display() {
@@ -148,156 +151,116 @@ function Display() {
 		container.append(title);
 	}
 
+
 }
 
-
-
-var markers = [];
-var map;
+let markers = [];
+let map;
 
 function initMap() {
-	map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 12,
-		center: {
-			lat: 33.6441211395679,
-			lng: -117.743128531307
-		}
-	});
-	google.maps.event.addListener(map, 'click', function(event) {
-		placeMarker(event.latLng);
-	});
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: {
+            lat: 33.6441211395679,
+            lng: -117.743128531307
+        }
+    });
+    google.maps.event.addListener(map, 'click', function (event) {
+        clearMarkers();
+        placeMarker(event.latLng);
+    });
+
+    // drop([{lat: 33.6441211395679, lng: -117.743128531307}]);
 }
 
-
-// if (navigator.geolocation) {
-//     navigator.geolocation.getCurrentPosition(function(position) {
-//         var pos = {
-//             lat: position.coords.latitude,
-//             lng: position.coords.longitude
-//
-//         };
-//         console.log(pos)
-//
-//         var current = {lat: pos.lat, lng: pos.lng};
-//         // var current = navigator.geolocation;
-//
-//         var map = new google.maps.Map(document.getElementById('map'), {
-//             zoom: 13,
-//             center: current
-//         });
-//         var marker = new google.maps.Marker({
-//             position: current,
-//             map: map
-//         });
-//
-//         map.setCenter(pos);
-//     }, function() {
-//         handleLocationError(true, infoWindow, map.getCenter());
-//     });
-//
-// } else {
-//     // Browser doesn't support Geolocation
-//     handleLocationError(false, infoWindow, map.getCenter());
+// function drop(position){
+//     clearMarkers();
+//     markers.push(new google.maps.Marker({
+//         position: position,
+//         map: map,
+//         animation: google.maps.Animation.DROP
+//     }));
 // }
-//
-// function createMakers(results) {
-//     for (var i = 0; i < results.length; i++) {
-//         var coords = results[i];
-//         var latLng = new google.maps.LatLng(coords[1], coords[0]);
-//         var marker = new google.maps.Marker({
-//             position: latLng,
-//             map: map
-//         });
-//     }
-// }
-//
-//
-//
-// var results = [
-//
-//     {lat: 33.6447809695316, lng: -117.74444454841},
-//     {lat: 33.6514285646533, lng: -117.746069293683},
-//     {lat: 33.620624, lng: -117.699047},
-//     {lat: 33.6220781, lng: -117.684251},
-//     {lat: 33.62161, lng: -117.73214},
-// ];
-//
-// createMakers(results);
 
-
-
-function drop(array) {
-	clearMarkers();
-	console.log(array);
-	for (var i = 0; i < array.length; i++) {
-		addMarkerWithTimeout(array[i], i * 200);
-	}
+function dropCinema(array) {
+    console.log(array);
+    for (let i = 0; i < array.length; i++) {
+        addCinemaWithTimeout(array[i], i * 200);
+    }
 }
 
-function addMarkerWithTimeout(position, timeout) {
-	window.setTimeout(function() {
-		markers.push(new google.maps.Marker({
-			position: position,
-			map: map,
-			// icon: 'https://findicons.com/files/icons/2166/oxygen/128/applications_toys.png',
-			animation: google.maps.Animation.DROP
-		}));
-	}, timeout);
+function addCinemaWithTimeout(position, timeout) {
+    window.setTimeout(function () {
+        markers.push(new google.maps.Marker({
+            position: position,
+            map: map,
+            icon: './images/Cinema-Icon.png',
+            animation: google.maps.Animation.DROP
+        }));
+    }, timeout);
 }
 
+function dropRestaurant(array) {
+    console.log(array);
+    for (let i = 0; i < array.length; i++) {
+        addRestaurantWithTimeout(array[i], i * 200);
+    }
+}
+
+function addRestaurantWithTimeout(position, timeout) {
+    window.setTimeout(function () {
+        markers.push(new google.maps.Marker({
+            position: position,
+            map: map,
+            icon: './images/Restaurant-Icon.png',
+            animation: google.maps.Animation.DROP
+        }));
+    }, timeout);
+}
 
 function clearMarkers() {
-	for (var i = 0; i < markers.length; i++) {
-		markers[i].setMap(null);
-	}
-	markers = [];
+    for (let i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+    }
+    markers = [];
 }
-
-function placeMarker(location) {
-	clearMarkers();
-	var marker = new google.maps.Marker({
-		position: location,
-		map: map
-	});
-}
-
 
 function Movie() {
-	this.movieDataFrontPage = function() {
-		var ajaxConfig = {
-			data: {
-				location: "33.6441211395679,-117.743128531307",
-				limit: 10,
-				countries: 'US',
-				fields: 'title,poster_image.flat,scene_images.flat,synopsis,trailers'
-			},
-			type: 'GET',
-			url: 'https://api.internationalshowtimes.com/v4/movies/',
-			headers: {
-				'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
-			},
-			success: function(result) {
-				if (!result) {
-					console.log("We have empty results or something went wrong");
-				} else {
-					console.log(result);
+    this.movieDataFrontPage = function () {
+        var ajaxConfig = {
+            data: {
+                location: "33.6441211395679,-117.743128531307",
+                limit: 10,
+                countries: 'US',
+                fields: 'title,poster_image.flat,scene_images.flat,synopsis,trailers'
+            },
+            type: 'GET',
+            url: 'https://api.internationalshowtimes.com/v4/movies/',
+            headers: {
+                'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
+            },
+            success: function (result) {
+                if (!result) {
+                    console.log("We have empty results or something went wrong");
+                } else {
+                    console.log(result);
 
-					////// MOVIE TRAILER ///////
+                    ////// MOVIE TRAILER ///////
 
                     // console.log(result.movies[0].trailers[0].trailer_files[0].url);
                     var trailer = result.movies[0].trailers[0].trailer_files[0].url;
 
-					// console.log(movieTrailer);
+                    // console.log(movieTrailer);
                     //
                     // for(var movieTrailerIndex = 0; movieTrailerIndex < movieTrailer.length; movieTrailerIndex++){
 
-					// }
+                    // }
 
                     trailer = $('#jumanji').attr('src');
-                    $("#myModal").on('hide.bs.modal', function(){
+                    $("#myModal").on('hide.bs.modal', function () {
                         $("#jumanji").attr('src', '');
                     });
-                    $("#myModal").on('show.bs.modal', function(){
+                    $("#myModal").on('show.bs.modal', function () {
                         $("#jumanji").attr('src', trailer);
                     });
                     // console.log(res);
@@ -305,126 +268,281 @@ function Movie() {
                     /////
 
                     for (var movieDataIndex = 0; movieDataIndex < 10; movieDataIndex++) {
-						var currentMovie = $('#movie' + (movieDataIndex + 1));
-						currentMovie[0].movie = result.movies[movieDataIndex];
-						currentMovie.css({
-							'background-image': "url('" + currentMovie[0].movie.poster_image + "')"
-						});
+                        var currentMovie = $('#movie' + (movieDataIndex + 1));
+                        currentMovie[0].movie = result.movies[movieDataIndex];
+                        currentMovie.css({
+                            'background-image': "url('" + currentMovie[0].movie.poster_image + "')"
+                        });
 
-						currentMovie.on('mouseover', function() {
-							$('.movieInfoTitle').text(this.movie.title);
-							$('.movieInfoSyn').text(this.movie.synopsis);
-							$('.movieInfoPics').empty();
-							for (var i = 0; i < this.movie.scene_images.length && i < 3; i++) {
-								$('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
-							}
-							var movieTrailer = result.movies;
-							// var movieTrailer = movie;
-							console.log(movieTrailer);
-							var trailer = movieTrailer[movieDataIndex].trailers[0].trailer_files[0].url;
-							var str = String(trailer);
+                        currentMovie.on('mouseover', function () {
+                            $('.movieInfoTitle').text(this.movie.title);
+                            $('.movieInfoSyn').text(this.movie.synopsis);
+                            $('.movieInfoPics').empty();
+                            for (var i = 0; i < this.movie.scene_images.length && i < 3; i++) {
+                                $('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
+                            }
+                            var movieTrailer = result.movies;
+                            // var movieTrailer = movie;
+                            console.log(movieTrailer);
+                            var trailer = movieTrailer[movieDataIndex].trailers[0].trailer_files[0].url;
+                            var str = String(trailer);
 
-                        	var res = str.replace("watch?v=", "embed/");
-                    		console.log(res);
-                    	$('#video').attr('src', url);
-						})
+                            var res = str.replace("watch?v=", "embed/");
+                            console.log(res);
+                            $('#video').attr('src', url);
+                        })
 
 
-					}
-				}
-			},
-			error: function(result) {
-				console.log(result)
-			}
-		};
-		$.ajax(ajaxConfig);
-	};
+                    }
+                }
+            },
+            error: function (result) {
+                console.log(result)
+            }
+        };
+        $.ajax(ajaxConfig);
+    };
 
-	this.cinemaDataSearch = function(location) {
-		var ajaxConfig = {
-			data: {
-				location: location,
-				limit: 4,
-				countries: 'US',
-				fields: 'id,name,telephone,website,location,location.address'
-			},
-			type: 'GET',
-			url: 'https://api.internationalshowtimes.com/v4/cinemas/',
-			headers: {
-				'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
-			},
-			success: function(result) {
-				if (!result) {
-					console.log("Something went wrong");
-				} else {
-					console.log(result);
-					var cinemaLocations = [];
-					for (var i = 0; i < result.cinemas.length; i++) {
-						let cinema = {
-							lat: result.cinemas[i].location.lat,
-							lng: result.cinemas[i].location.lon
-						};
-						console.log(cinema);
-						cinemaLocations.push(cinema);
-					}
-					console.log(cinemaLocations);
-					drop(cinemaLocations);
-				}
-			},
-			error: function(result) {
-				console.log(result)
-			}
-		};
-		$.ajax(ajaxConfig);
-	};
+    this.cinemaDataSearch = function (location) {
+        var ajaxConfig = {
+            data: {
+                location: location,
+                limit: 4,
+                countries: 'US',
+                fields: 'id,name,telephone,website,location,location.address'
+            },
+            type: 'GET',
+            url: 'https://api.internationalshowtimes.com/v4/cinemas/',
+            headers: {
+                'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
+            },
+            success: function (result) {
+                if (!result) {
+                    console.log("Something went wrong");
+                } else {
+                    console.log(result);
+                    var cinemaLocations = [];
+                    for (var i = 0; i < result.cinemas.length; i++) {
+                        let cinema = {
+                            lat: result.cinemas[i].location.lat,
+                            lng: result.cinemas[i].location.lon
+                        };
+                        console.log(cinema);
+                        cinemaLocations.push(cinema);
+                    }
+                    console.log(cinemaLocations);
+                    drop(cinemaLocations);
+                }
+            },
+            error: function (result) {
+                console.log(result)
+            }
+        };
+        $.ajax(ajaxConfig);
+    };
+
+    function placeMarker(location, foodType) {
+        clearMarkers();
+        markers.push(new google.maps.Marker({
+            position: location,
+            map: map,
+            animation: google.maps.Animation.DROP
+        }));
+        let locString = location.lat() + "," + location.lng();
+        let yelpLocation = {lat: location.lat(), lng: location.lng()};
+        movies.cinemaDataSearch(locString);
+        yelp.yelpData(foodType, yelpLocation);
+    }
+
+
+    let movies = {
+        currentMovieId: "",
+        currentCinemasId: [],
+
+        movieDataFrontPage: function () {
+            let ajaxConfig = {
+                data: {
+                    location: "33.6441211395679,-117.743128531307",
+                    limit: 10,
+                    countries: 'US',
+                    fields: 'title,id,poster_image.flat,scene_images.flat,synopsis,trailers'
+                },
+                type: 'GET',
+                url: 'https://api.internationalshowtimes.com/v4/movies/',
+                headers: {
+                    'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
+                },
+                success: function (result) {
+                    if (!result) {
+                        console.log("We have empty results or something went wrong");
+                    } else {
+                        console.log(result);
+                        for (let movieDataIndex = 0; movieDataIndex < 10; movieDataIndex++) {
+                            let currentMovie = $('#movie' + (movieDataIndex + 1));
+                            currentMovie[0].movie = result.movies[movieDataIndex];
+                            currentMovie.css({
+                                'background-image': "url('" + currentMovie[0].movie.poster_image + "')"
+                            });
+                            currentMovie.on('mouseover', function () {
+                                $('.movieInfoTitle').text(this.movie.title);
+                                $('.movieInfoSyn').text(this.movie.synopsis);
+                                $('.movieInfoPics').empty();
+                                for (let i = 0; i < this.movie.scene_images.length && i < 3; i++) {
+                                    $('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
+                                }
+                            });
+                            currentMovie.on('click', function () {
+                                movies.currentMovieId = this.movie.id;
+                                console.log(this.movie.id);
+                            });
+                        }
+                    }
+                },
+                error: function (result) {
+                    console.log(result)
+                }
+            };
+            $.ajax(ajaxConfig);
+        },
+
+        cinemaDataSearch: function (location, movie_id) {
+            let ajaxConfig = {
+                data: {
+                    location: location,
+                    limit: 4,
+                    distance: 10,
+                    movie_id: movie_id,
+                    countries: 'US',
+                    fields: 'id,name,telephone,website,location,location.address'
+                },
+                type: 'GET',
+                url: 'https://api.internationalshowtimes.com/v4/cinemas/',
+                headers: {
+                    'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
+                },
+                success: function (result) {
+                    if (!result) {
+                        console.log("Something went wrong");
+                    } else {
+                        console.log(result);
+                        let cinemaLocations = [];
+                        for (let i = 0; i < result.cinemas.length; i++) {
+                            movies.currentCinemasId.push(result.cinemas[i].id);
+                            let cinema = {
+                                lat: result.cinemas[i].location.lat,
+                                lng: result.cinemas[i].location.lon
+                            };
+                            cinemaLocations.push(cinema);
+                        }
+                        dropCinema(cinemaLocations);
+                    }
+                },
+                error: function (result) {
+                    console.log(result)
+                }
+            };
+            $.ajax(ajaxConfig);
+        },
+
+        displayCinemasMatchingId: function (index) {
+            let ajaxConfig = {
+                data: {
+                    movie_id: movies.currentMovieId,
+                    cinema_id: movies.currentCinemasId[index],
+                    time_from: movies.setDate(),
+                    fields: 'id,name,telephone,website,location,location.address'
+                },
+                type: 'GET',
+                url: 'https://api.internationalshowtimes.com/v4/showtimes/',
+                headers: {
+                    'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
+                },
+                success: function (result) {
+                    if (!result) {
+                        console.log("Something went wrong");
+                    } else {
+                        console.log(result);
+                    }
+                },
+                error: function (result) {
+                    console.log(result)
+                }
+            };
+            $.ajax(ajaxConfig);
+        },
+
+        setDate: function () {
+            let now = new Date();
+            let year = now.getFullYear();
+            let month = now.getMonth() + 1;
+            let day = now.getDate();
+            let hour = now.getHours();
+            let minute = now.getMinutes();
+            let second = now.getSeconds();
+            if (month.toString().length == 1) {
+                let month = '0' + month;
+            }
+            if (day.toString().length == 1) {
+                let day = '0' + day;
+            }
+            if (hour.toString().length == 1) {
+                let hour = '0' + hour;
+            }
+            if (minute.toString().length == 1) {
+                let minute = '0' + minute;
+            }
+            if (second.toString().length == 1) {
+                let second = '0' + second;
+            }
+            return year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second + "-08:00";
+        }
+    };
+
+    function GetYelpData() {
+        this.yelpData = function (term, location) {
+            $.ajax({
+                url: "http://danielpaschal.com/yelpproxy.php",
+                method: "GET",
+                dataType: "JSON",
+                data: {
+                    api_key: "dYgZH0Ww1s8M1O3ERoy1zlO76NJdF5SCsCvZ7JcK2E7-9JQ2n2GFVQdNweumwfphSpCOKCB-GdhKe0kdNeepo7J91qE78gAJzDidYLCMGWEKaq6TK6kBS_Z2JvNcWnYx",
+                    term: term,
+                    latitude: location.lat,
+                    longitude: location.lng,
+                    location: location,
+                    limit: 5,
+                    radius: 8046
+                },
+                success: (response) => {
+                    console.log(response);
+                    let dataObj = response;
+                    this.getData(dataObj);
+                },
+                error: (response) => {
+                    console.log(response);
+                }
+            })
+        };
+        this.getData = function (data) {
+            let restaurantLocation = [];
+            for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
+                let restaurant = {
+                    lat: data.businesses[dataIndex].coordinates.latitude,
+                    lng: data.businesses[dataIndex].coordinates.longitude
+                };
+                console.log("this is single" + restaurant);
+                restaurantLocation.push(restaurant);
+            }
+            console.log("the whole" + restaurantLocation);
+            dropRestaurant(restaurantLocation);
+        }
+    }
+
+    let testObj = {
+        lat: 33.6441211395679,
+        lng: -117.743128531307
+    };
+    let yelp = new GetYelpData();
+// yelp.yelpData("sushi", testObj.lat, testObj.lng);
+// movies.cinemaDataSearch(testObj);
 }
-
-var movies = new Movie();
-
-function GetYelpData() {
-
-	this.yelpData = function(term, location) {
-		$.ajax({
-			url: "http://danielpaschal.com/yelpproxy.php",
-			method: "GET",
-			dataType: "JSON",
-			data: {
-				api_key: "dYgZH0Ww1s8M1O3ERoy1zlO76NJdF5SCsCvZ7JcK2E7-9JQ2n2GFVQdNweumwfphSpCOKCB-GdhKe0kdNeepo7J91qE78gAJzDidYLCMGWEKaq6TK6kBS_Z2JvNcWnYx",
-				term: term,
-				latitude: location.lat,
-				longitude: location.lng,
-				location: location,
-				limit: 5,
-				radius: 8046
-			},
-			success: (response) => {
-				console.log(response);
-				let dataObj = response;
-				this.getData(dataObj);
-			},
-			error: (response) => {
-				console.log(response);
-			}
-		})
-	};
-	this.getData = function(data) {
-		var restaurantLocation = [];
-		for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
-			let restaurant = {
-				lat: data.businesses[dataIndex].coordinates.latitude,
-				lng: data.businesses[dataIndex].coordinates.longitude
-			};
-			console.log("this is single" + restaurant);
-			restaurantLocation.push(restaurant);
-		}
-		console.log("the whole" + restaurantLocation);
-		drop(restaurantLocation);
-	}
-}
-var testObj = {
-	lat: 33.6441211395679,
-	lng: -117.743128531307
-}
-var yelp = new GetYelpData();
-yelp.yelpData("sushi", testObj);
-movies.cinemaDataSearch(testObj);
