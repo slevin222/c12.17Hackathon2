@@ -7,7 +7,7 @@ function initializeApp() {
 }
 
 function Display() {
-    this.foodArray = ['./images/pizza.svg', './images/rie.svg', './images/taco.svg'];
+    this.foodArray = ['./images/pizza.svg', './images/noodles.svg', './images/taco.svg','./images/sushi.svg','./images/Burger.svg','./images/Coffee.svg','./images/Beer.svg'];
 
 
     this.init = function () {
@@ -30,7 +30,7 @@ function Display() {
             var foodRow = $('<div>', {
                 class: 'foodType' + x
             });
-            foodRow.css('background-image', "url('"+this.foodArray[x-1]+"')");
+            foodRow.css('background-image', "url('" + this.foodArray[x - 1] + "')");
             container.append(foodRow);
         }
 
@@ -94,9 +94,8 @@ var infowindow;
 function initMap() {
 
 
-
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
+        navigator.geolocation.getCurrentPosition(function (position) {
             var pos = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
@@ -123,7 +122,7 @@ function initMap() {
             // infoWindow.setContent('Location found.');
             // infoWindow.open(map);
             map.setCenter(pos);
-        }, function() {
+        }, function () {
             handleLocationError(true, infoWindow, map.getCenter());
         });
     } else {
@@ -217,6 +216,8 @@ function Movie() {
                             for (var i = 0; i < this.movie.scene_images.length && i < 3; i++) {
                                 $('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
                             }
+                            // var url = this.movie.trailers[0].trailer_files[0].url.replace("watch?v=", "embed/");
+                            // $('#video-modal').empty().attr('src', url);
                         })
                     }
                 }
@@ -228,7 +229,7 @@ function Movie() {
         $.ajax(ajaxConfig);
     };
 
-    this.cinemaDataSearchPage = function (location) {
+    this.cinemaDataSearch = function (location) {
         var ajaxConfig = {
             data: {
                 location: location,
@@ -242,14 +243,23 @@ function Movie() {
                 'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
             },
             success: function (result) {
-                if (!result)
+                if (!result) {
                     console.log("Something went wrong");
-                 else
+                }
+                else {
                     console.log(result);
+                    var cinemaLocations = [];
+                    for (var i = 0; i < result.cinemas.length; i++) {
+                        let cinema = {lat:result.cinemas[i].location.lat, lng:result.cinemas[i].location.lon};
+                        console.log(cinema);
+                        cinemaLocations.push(cinema);
+                    }
                     return result;
-
+                }
             },
-            error: function (result) {console.log(result)}
+            error: function (result) {
+                console.log(result)
+            }
         };
         $.ajax(ajaxConfig);
     };
@@ -272,17 +282,14 @@ function GetYelpData() {
                 radius: 8046
             },
             success: (response) => {
-            console.log(response);
-        let dataObj = response;
-        this.getData(dataObj);
-    },
-        error: (response) =>
-        {
-            console.log(response);
-        }
-
-    })
-
+                console.log(response);
+                let dataObj = response;
+                this.getData(dataObj);
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
     };
     this.getData = function (data) {
         for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
@@ -295,4 +302,4 @@ function GetYelpData() {
 var yelp = new GetYelpData();
 yelp.yelpData();
 
-movies.cinemaDataSearchPage();
+movies.cinemaDataSearch();
