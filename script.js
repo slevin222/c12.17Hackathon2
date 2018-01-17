@@ -17,7 +17,6 @@ function changeScreen() {
 
 let display = {
 
-	//this.foodArray = ['./images/Pizza.svg', './images/Noodles.svg', './images/Taco.svg', './images/Sushi.svg', './images/Burger.svg', './images/Coffee.svg', './images/Beer.svg'];
 	foodObject: [{
 			name: "pizza",
 			img: './images/Pizza.svg'
@@ -43,7 +42,7 @@ let display = {
 			img: './images/Coffee.svg'
 		},
 		{
-			name: "bear",
+			name: "beer",
 			img: './images/Beer.svg'
 		}
 	],
@@ -206,7 +205,6 @@ function initMap() {
 }
 
 function dropCinema(array) {
-    console.log(array);
     for (let i = 0; i < array.length; i++) {
         (function () {
             let marker = new google.maps.Marker({
@@ -217,14 +215,19 @@ function dropCinema(array) {
             });
             markers.push(marker);
             google.maps.event.addDomListener(marker, 'click', function() {
-                window.location.href = marker.url;
+                $('.movieInfo').append('<div>',{
+                    'class' : 'movie-times row'
+                });
+                $('.movie-times').append('<div>',{
+                    'class' : 'col-sm-8',
+                    'text'  : movies.currentCinemas[i]
+                });
             });
         })(markers[i]);
     }
 }
 
 function dropRestaurant(array) {
-    console.log(array);
     for (let i = 0; i < array.length; i++) {
         (function () {
             let marker = new google.maps.Marker({
@@ -267,6 +270,7 @@ function placeMarker(location, foodType) {
 let movies = {
     currentMovieId: "",
     currentCinemasId: [],
+    currentCinemas: [],
 
     movieDataFrontPage: function () {
         let ajaxConfig = {
@@ -308,12 +312,22 @@ let movies = {
                         });
                         currentMovie.append(trailerButton);
 
+                        ////// MOVIE TRAILER ///////
+                        let movieTrailer = result.movies;
+                        let trailer = movieTrailer[movieDataIndex].trailers[0].trailer_files[0].url;
+                        let str = String(trailer);
+                        let res = str.replace("watch?v=", "embed/");
                         // Mouseover to show button
                         currentMovie.on('mouseenter', function () {
                             $(this).find("button").show();
                         });
                         currentMovie.on('mouseleave', function () {
                             $(this).find("button").hide();
+                        });
+
+                        $('#movie'+(movieDataIndex + 1)+' button').on('click', function(){
+                            $('#video').attr('src', res);
+                            $('#trailerModal h4').text(result.movies[movieDataIndex].title);
                         });
 
                         // Shows Movie Data on Click
@@ -327,14 +341,6 @@ let movies = {
                             movies.currentMovieId = this.movie.id;
                             console.log(this.movie.id);
 
-                            ////// MOVIE TRAILER ///////
-                            let movieTrailer = result.movies;
-                            let trailer = movieTrailer[movieDataIndex].trailers[0].trailer_files[0].url;
-                            let str = String(trailer);
-
-                            let res = str.replace("watch?v=", "embed/");
-                            console.log(str);
-                            $('#video').attr('src', str);
                         });
                     }
                 }
@@ -366,15 +372,17 @@ let movies = {
                     console.log("Something went wrong");
                 } else {
                     console.log(result);
+
                     let cinemaLocations = [];
                     for (let i = 0; i < result.cinemas.length; i++) {
-                        movies.currentCinemasId.push(result.cinemas[i].id);
+                        movies.currentCinemas.push(result.cinemas[i]);
                         let cinema = {
                             lat: result.cinemas[i].location.lat,
                             lng: result.cinemas[i].location.lon
                         };
                         cinemaLocations.push(cinema);
                     }
+                    console.log(movies.currentCinemas);
                     dropCinema(cinemaLocations);
                 }
             },
