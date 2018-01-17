@@ -6,6 +6,9 @@ function initializeApp() {
 }
 
 function changeScreen() {
+	var zipCode = $('.form-control').val();
+	yelp.yelpData("", zipCode);
+
 	$("#introPage").fadeOut(1000);
 	display = new Display();
 	display.init();
@@ -116,11 +119,17 @@ function Display() {
 			},
 			value: "Submit"
 		})
-		foodInfo.append(foodInput, locationInput, foodButton)
-		var title = $('<div>', {
-			class: 'footer'
-		});
-		container.append(title);
+		foodInfo.append(foodInput, locationInput, foodButton);
+		for (let h = 1; h < 6; h++) {
+			var foodPlace = $("<div>", {
+				class: "foodPlace" + h
+			})
+			foodInfo.append(foodPlace);
+		}
+		// var title = $('<div>', {
+		// 	class: 'footer'
+		// });
+		// container.append(title);
 	}
 
 }
@@ -351,13 +360,18 @@ function GetYelpData() {
 	};
 	this.getData = function(data) {
 		var restaurantLocation = [];
+		var restaurantName = [];
 		for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
 			let restaurant = {
 				lat: data.businesses[dataIndex].coordinates.latitude,
 				lng: data.businesses[dataIndex].coordinates.longitude
 			};
-			console.log("this is single" + restaurant);
+			let name = data.businesses[dataIndex].name
+			console.log("this is single restaurant " + restaurant);
 			restaurantLocation.push(restaurant);
+			$('.foodPlace' + (dataIndex + 1)).text(name);
+			restaurantName.push(name);
+
 		}
 		console.log("the whole" + restaurantLocation);
 		drop(restaurantLocation);
