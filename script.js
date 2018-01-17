@@ -96,7 +96,6 @@ let display =  {
 		});
 
 		// trailer
-
 		let trailerButton = $("<button>", {
 			type: "button",
 			class: "btn btn-info btn-md",
@@ -259,14 +258,18 @@ let movies = {
                         currentMovie.css({
                             'background-image': "url('" + currentMovie[0].movie.poster_image + "')"
                         });
-
-                        currentMovie.on('mouseover', function () {
+                        // currentMovie.on('mouseover', function () {
+                        //
+                        // });
+                        currentMovie.on('click', function () {
                             $('.movieInfoTitle').text(this.movie.title);
                             $('.movieInfoSyn').text(this.movie.synopsis);
                             $('.movieInfoPics').empty();
                             for (let i = 0; i < this.movie.scene_images.length && i < 3; i++) {
                                 $('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
                             }
+                            movies.currentMovieId = this.movie.id;
+                            console.log(this.movie.id);
 
                             ////// MOVIE TRAILER ///////
                             let movieTrailer = result.movies;
@@ -274,15 +277,9 @@ let movies = {
                             let str = String(trailer);
 
                             let res = str.replace("watch?v=", "embed/");
-                            console.log(res);
-                            $('#video').attr('src', res);
+                            console.log(str);
+                            $('#video').attr('src', str);
                         });
-                        currentMovie.on('click', function () {
-                            movies.currentMovieId = this.movie.id;
-                            console.log(this.movie.id);
-                        });
-
-
                     }
                 }
             },
@@ -425,8 +422,6 @@ function GetYelpData() {
         dropRestaurant(restaurantLocation);
     }
 }
-
-
 let testObj = {
     lat: 33.6441211395679,
     lng: -117.743128531307
