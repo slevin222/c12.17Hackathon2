@@ -5,6 +5,7 @@ function initializeApp() {
 	display.init();
 	initMap();
 }
+var restarurantLocation = [];
 
 function Display() {
 	this.foodArray = ['./images/pizza.svg', './images/rie.svg', './images/taco.svg'];
@@ -92,16 +93,11 @@ var infowindow;
 //needs to call function initMap because
 
 function initMap() {
-
-
-
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			var pos = {
 				lat: position.coords.latitude,
 				lng: position.coords.longitude
-
-
 			};
 			console.log(pos);
 			yelp.yelpData(pos.lat, pos.lng);
@@ -114,8 +110,9 @@ function initMap() {
 
 			var map = new google.maps.Map(document.getElementById('map'), {
 				zoom: 15,
-				center: current
+				center: current[0]
 			});
+
 			var marker = new google.maps.Marker({
 				position: current,
 				map: map
@@ -290,8 +287,16 @@ function GetYelpData() {
 	};
 	this.getData = function(data) {
 		for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
-			console.log(data.businesses[dataIndex].categories);
+			this.addCoordintes(data.businesses[dataIndex]);
 		}
+	}
+	this.addCoordintes = function(data) {
+		let dataObj = {};
+		dataObj.lat = data.coordinates.latitude;
+		dataObj.lng = data.coordinates.longitude;
+		restarurantLocation.push(dataObj);
+		/*call the marker making function to set the different markers */
+		console.log(dataObj);
 	}
 
 }
