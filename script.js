@@ -1,19 +1,18 @@
 $(document).ready(initializeApp);
 
 function initializeApp() {
-    display = new Display();
-    display.init();
-    initMap();
+	display = new Display();
+	display.init();
+	initMap();
 }
 
 function Display() {
-    this.foodArray = ['./images/pizza.svg', './images/rie.svg', './images/taco.svg'];
-
-
+    this.foodArray = ['./images/pizza.svg', './images/noodles.svg', './images/taco.svg','./images/sushi.svg','./images/Burger.svg','./images/Coffee.svg','./images/Beer.svg'];
+  
     this.init = function () {
         this.display();
     };
-
+  
     this.display = function () {
         container = $("#container");
 
@@ -30,7 +29,7 @@ function Display() {
             var foodRow = $('<div>', {
                 class: 'foodType' + x
             });
-            foodRow.css('background-image', "url('"+this.foodArray[x-1]+"')");
+            foodRow.css('background-image', "url('" + this.foodArray[x - 1] + "')");
             container.append(foodRow);
         }
 
@@ -86,8 +85,55 @@ function Display() {
 }
 
 
-function Movie() {
 
+var map;
+var infowindow;
+
+//needs to call function initMap because
+
+function initMap() {
+
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			var pos = {
+				lat: position.coords.latitude,
+				lng: position.coords.longitude
+			};
+			console.log(pos);
+			yelp.yelpData(pos.lat, pos.lng);
+
+			var current = {
+				lat: pos.lat,
+				lng: pos.lng
+			};
+			// var current = navigator.geolocation;
+
+			var map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 15,
+				center: current
+			});
+			var marker = new google.maps.Marker({
+				position: current,
+				map: map
+			});
+
+			// var infoWindow = new google.maps.InfoWindow;
+			//
+			// infoWindow.setPosition(pos);
+			// infoWindow.setContent('Location found.');
+			// infoWindow.open(map);
+			map.setCenter(pos);
+		}, function() {
+			handleLocationError(true, infoWindow, map.getCenter());
+		});
+	} else {
+		// Browser doesn't support Geolocation
+		handleLocationError(false, infoWindow, map.getCenter());
+	}
+}
+
+
+function Movie() {
     this.movieDataFrontPage = function () {
         var ajaxConfig = {
             data: {
@@ -119,6 +165,8 @@ function Movie() {
                             for (var i = 0; i < this.movie.scene_images.length && i < 3; i++) {
                                 $('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
                             }
+                            // var url = this.movie.trailers[0].trailer_files[0].url.replace("watch?v=", "embed/");
+                            // $('#video-modal').empty().attr('src', url);
                         })
                     }
                 }
@@ -130,7 +178,7 @@ function Movie() {
         $.ajax(ajaxConfig);
     };
 
-    this.cinemaDataSearchPage = function (location) {
+    this.cinemaDataSearch = function (location) {
         var ajaxConfig = {
             data: {
                 location: location,
@@ -144,14 +192,23 @@ function Movie() {
                 'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
             },
             success: function (result) {
-                if (!result)
+                if (!result) {
                     console.log("Something went wrong");
-                 else
+                }
+                else {
                     console.log(result);
+                    var cinemaLocations = [];
+                    for (var i = 0; i < result.cinemas.length; i++) {
+                        let cinema = {lat:result.cinemas[i].location.lat, lng:result.cinemas[i].location.lon};
+                        console.log(cinema);
+                        cinemaLocations.push(cinema);
+                    }
                     return result;
-
+                }
             },
-            error: function (result) {console.log(result)}
+            error: function (result) {
+                console.log(result)
+            }
         };
         $.ajax(ajaxConfig);
     };
@@ -174,27 +231,21 @@ function GetYelpData() {
                 radius: 8046
             },
             success: (response) => {
-            console.log(response);
-        let dataObj = response;
-        this.getData(dataObj);
-    },
-        error: (response) =>
-        {
-            console.log(response);
-        }
-
-    })
-
+                console.log(response);
+                let dataObj = response;
+                this.getData(dataObj);
+            },
+            error: (response) => {
+                console.log(response);
+            }
+        })
     };
     this.getData = function (data) {
         for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
             console.log(data.businesses[dataIndex].categories);
         }
     }
-
 }
 
 var yelp = new GetYelpData();
-yelp.yelpData();
-
-movies.cinemaDataSearchPage();
+movies.cinemaDataSearch();
