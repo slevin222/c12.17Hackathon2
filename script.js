@@ -52,21 +52,33 @@ function Display() {
 
         movieInfo.append(movieInfoPics);
 
-        var trailerButton = $("<button>", {
+        var theatreButton = $("<button>", {
             type: "button",
-            class: "btn btn-info btn-lg",
-            text: "Show Movie Trailer",
-            'data-target': 'trailerModal',
+            class: "btn btn-info btn-md",
+            text: "Show Theatres",
+            'data-target': 'theatreModal',
             'data-toggle': "modal",
             on: {
                 click: function () {
-                    $('#trailerModal').modal('show');
+                    $('#theatreModal').modal('show');
                 }
             }
         });
 
-        movieInfo.append(trailerButton);
-
+        movieInfo.append(theatreButton);
+        var showTimes = $("<button>", {
+            type: "button",
+            class: "btn btn-info btn-md",
+            text: "Show Movie Times",
+            'data-target': 'showTimesModal',
+            'data-toggle': "modal",
+            on: {
+                click: function () {
+                    $('#showTimesModal').modal('show');
+                }
+            }
+        });
+        movieInfo.append(showTimes);
         var displayMap = $('<div>', {
             class: 'displayMap',
             id: 'map'
