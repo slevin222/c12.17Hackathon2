@@ -49,6 +49,18 @@ body{
     margin: .5% 0 0 0;
 }
 
+.movieInfoTitle{
+    height: 15%;
+    width: 100%;
+}
+.movieInfoSyn{
+    height: 40%;
+    width: 100%;
+}
+.movieInfoPics{
+    height: 35%;
+    width: 100%;
+}
 .displayMap{
     height: 40%;
     width: 48%;
