@@ -155,37 +155,37 @@ function initMap() {
 function dropCinema(array) {
     console.log(array);
     for (let i = 0; i < array.length; i++) {
-        addCinemaWithTimeout(array[i], i * 200);
+        (function () {
+            let marker = new google.maps.Marker({
+                position: array[i],
+                map: map,
+                icon: './images/Cinema-Icon.png',
+                animation: google.maps.Animation.DROP
+            });
+            markers.push(marker);
+            google.maps.event.addDomListener(marker, 'click', function() {
+                window.location.href = marker.url;
+            });
+        })(markers[i]);
     }
-}
-
-function addCinemaWithTimeout(position, timeout) {
-    window.setTimeout(function () {
-        markers.push(new google.maps.Marker({
-            position: position,
-            map: map,
-            icon: './images/Cinema-Icon.png',
-            animation: google.maps.Animation.DROP
-        }));
-    }, timeout);
 }
 
 function dropRestaurant(array) {
     console.log(array);
     for (let i = 0; i < array.length; i++) {
-        addRestaurantWithTimeout(array[i], i * 200);
+        (function () {
+            let marker = new google.maps.Marker({
+                position: array[i],
+                map: map,
+                icon: './images/Restaurant-Icon.png',
+                animation: google.maps.Animation.DROP
+            });
+            markers.push(marker);
+            google.maps.event.addDomListener(marker, 'click', function() {
+                // $('.movieInfo').
+            });
+        })(markers[i]);
     }
-}
-
-function addRestaurantWithTimeout(position, timeout) {
-    window.setTimeout(function () {
-        markers.push(new google.maps.Marker({
-            position: position,
-            map: map,
-            icon: './images/Restaurant-Icon.png',
-            animation: google.maps.Animation.DROP
-        }));
-    }, timeout);
 }
 
 function clearMarkers() {
@@ -230,37 +230,37 @@ let movies = {
                     console.log("We have empty results or something went wrong");
                 }  else {
                     console.log(result);
-                    // trailer = $('#jumanji').attr('src');
-                    // $("#myModal").on('hide.bs.modal', function () {
-                    //     $("#jumanji").attr('src', '');
-                    // });
-                    // $("#myModal").on('show.bs.modal', function () {
-                    //     $("#jumanji").attr('src', trailer);
-                    // });
-                    //
-
                     for (let movieDataIndex = 0; movieDataIndex < 10; movieDataIndex++) {
                         let currentMovie = $('#movie' + (movieDataIndex + 1));
                         currentMovie[0].movie = result.movies[movieDataIndex];
                         currentMovie.css({
                             'background-image': "url('" + currentMovie[0].movie.poster_image + "')"
                         });
-                        currentMovie.on('mouseover', function () {
-                            // trailer
-                            let trailerButton = $("<button>", {
-                                type: "button",
-                                class: "btn btn-info btn-md",
-                                text: "Trailer",
-                                'data-target': 'trailerModal',
-                                'data-toggle': "modal",
-                                on: {
-                                    click: function(){
-                                        $('#trailerModal').modal('show');
-                                    }
+                        // Creates Button
+                        let trailerButton = $("<button>", {
+                            id : '#moviebutton'+(movieDataIndex+1),
+                            type: "button",
+                            class: "btn btn-default btn-md",
+                            text: "Trailer",
+                            'data-target': 'trailerModal',
+                            'data-toggle': "modal",
+                            on: {
+                                click: function(){
+                                    $('#trailerModal').modal('show');
                                 }
-                            });
-                            currentMovie.append(trailerButton);
+                            }
                         });
+                        currentMovie.append(trailerButton);
+
+                        // Mouseover to show button
+                        currentMovie.on('mouseenter', function () {
+                            $(this).find("button").show();
+                        });
+                        currentMovie.on('mouseleave', function () {
+                            $(this).find("button").hide();
+                        });
+
+                        // Shows Movie Data on Click
                         currentMovie.on('click', function () {
                             $('.movieInfoTitle').text(this.movie.title);
                             $('.movieInfoSyn').text(this.movie.synopsis);
@@ -272,10 +272,6 @@ let movies = {
                             console.log(this.movie.id);
 
                             ////// MOVIE TRAILER ///////
-
-
-
-
                             let movieTrailer = result.movies;
                             let trailer = movieTrailer[movieDataIndex].trailers[0].trailer_files[0].url;
                             let str = String(trailer);
