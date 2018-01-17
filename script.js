@@ -96,6 +96,7 @@ let display =  {
 		});
 
 		// trailer
+
 		let trailerButton = $("<button>", {
 			type: "button",
 			class: "btn btn-info btn-md",
@@ -424,6 +425,7 @@ function GetYelpData() {
         dropRestaurant(restaurantLocation);
     }
 }
+
 
 let testObj = {
     lat: 33.6441211395679,
