@@ -134,6 +134,8 @@ function Display() {
 
 }
 
+
+
 var markers = [];
 var map;
 
@@ -146,57 +148,87 @@ function initMap() {
 		}
 	});
 	google.maps.event.addListener(map, 'click', function(event) {
-		clearMarkers();
 		placeMarker(event.latLng);
 	});
-
-	// drop([{lat: 33.6441211395679, lng: -117.743128531307}]);
 }
 
-// function drop(position){
-//     clearMarkers();
-//     markers.push(new google.maps.Marker({
-//         position: position,
-//         map: map,
-//         animation: google.maps.Animation.DROP
-//     }));
+
+// if (navigator.geolocation) {
+//     navigator.geolocation.getCurrentPosition(function(position) {
+//         var pos = {
+//             lat: position.coords.latitude,
+//             lng: position.coords.longitude
+//
+//         };
+//         console.log(pos)
+//
+//         var current = {lat: pos.lat, lng: pos.lng};
+//         // var current = navigator.geolocation;
+//
+//         var map = new google.maps.Map(document.getElementById('map'), {
+//             zoom: 13,
+//             center: current
+//         });
+//         var marker = new google.maps.Marker({
+//             position: current,
+//             map: map
+//         });
+//
+//         map.setCenter(pos);
+//     }, function() {
+//         handleLocationError(true, infoWindow, map.getCenter());
+//     });
+//
+// } else {
+//     // Browser doesn't support Geolocation
+//     handleLocationError(false, infoWindow, map.getCenter());
 // }
+//
+// function createMakers(results) {
+//     for (var i = 0; i < results.length; i++) {
+//         var coords = results[i];
+//         var latLng = new google.maps.LatLng(coords[1], coords[0]);
+//         var marker = new google.maps.Marker({
+//             position: latLng,
+//             map: map
+//         });
+//     }
+// }
+//
+//
+//
+// var results = [
+//
+//     {lat: 33.6447809695316, lng: -117.74444454841},
+//     {lat: 33.6514285646533, lng: -117.746069293683},
+//     {lat: 33.620624, lng: -117.699047},
+//     {lat: 33.6220781, lng: -117.684251},
+//     {lat: 33.62161, lng: -117.73214},
+// ];
+//
+// createMakers(results);
 
-function dropCinema(array) {
+
+
+function drop(array) {
+	clearMarkers();
 	console.log(array);
 	for (var i = 0; i < array.length; i++) {
-		addCinemaWithTimeout(array[i], i * 200);
+		addMarkerWithTimeout(array[i], i * 200);
 	}
 }
 
-function addCinemaWithTimeout(position, timeout) {
+function addMarkerWithTimeout(position, timeout) {
 	window.setTimeout(function() {
 		markers.push(new google.maps.Marker({
 			position: position,
 			map: map,
-			icon: './images/Cinema-Icon.png',
+			// icon: 'https://findicons.com/files/icons/2166/oxygen/128/applications_toys.png',
 			animation: google.maps.Animation.DROP
 		}));
 	}, timeout);
 }
 
-function dropRestaurant(array) {
-	console.log(array);
-	for (var i = 0; i < array.length; i++) {
-		addRestaurantWithTimeout(array[i], i * 200);
-	}
-}
-
-function addRestaurantWithTimeout(position, timeout) {
-	window.setTimeout(function() {
-		markers.push(new google.maps.Marker({
-			position: position,
-			map: map,
-			icon: './images/Restaurant-Icon.png',
-			animation: google.maps.Animation.DROP
-		}));
-	}, timeout);
-}
 
 function clearMarkers() {
 	for (var i = 0; i < markers.length; i++) {
@@ -207,18 +239,10 @@ function clearMarkers() {
 
 function placeMarker(location) {
 	clearMarkers();
-	markers.push(new google.maps.Marker({
+	var marker = new google.maps.Marker({
 		position: location,
-		map: map,
-		animation: google.maps.Animation.DROP
-	}));
-	var locString = location.lat() + "," + location.lng();
-	var yelpLocation = {
-		lat: location.lat(),
-		lng: location.lng()
-	};
-	movies.cinemaDataSearch(locString);
-	yelp.yelpData('sushi', yelpLocation);
+		map: map
+	});
 }
 
 
@@ -295,7 +319,7 @@ function Movie() {
 						cinemaLocations.push(cinema);
 					}
 					console.log(cinemaLocations);
-					dropCinema(cinemaLocations);
+					drop(cinemaLocations);
 				}
 			},
 			error: function(result) {
@@ -305,6 +329,8 @@ function Movie() {
 		$.ajax(ajaxConfig);
 	};
 }
+
+var movies = new Movie();
 
 function GetYelpData() {
 
@@ -351,12 +377,10 @@ function GetYelpData() {
 		drop(restaurantLocation);
 	}
 }
-
 var testObj = {
 	lat: 33.6441211395679,
 	lng: -117.743128531307
 }
-var movies = new Movie();
 var yelp = new GetYelpData();
-// yelp.yelpData("sushi", testObj.lat, testObj.lng);
-// movies.cinemaDataSearch(testObj);
+yelp.yelpData("sushi", testObj);
+movies.cinemaDataSearch(testObj);
