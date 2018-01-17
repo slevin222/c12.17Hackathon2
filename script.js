@@ -100,12 +100,6 @@ function Display() {
 		});
 		container.append(foodInfo);
 
-
-		// var title = $('<div>', {
-		// 	class: 'footer'
-		// });
-		// container.append(title);
-
 		var foodInput = $('<input>', {
 			type: "text",
 			name: "genre",
@@ -127,10 +121,10 @@ function Display() {
 			value: "Submit"
 		})
 		foodInfo.append(foodInput, locationInput, foodButton)
-		var title = $('<div>', {
-			class: 'footer'
-		});
-		container.append(title);
+		// var title = $('<div>', {
+		// 	class: 'footer'
+		// });
+		// container.append(title);
 
 	}
 
