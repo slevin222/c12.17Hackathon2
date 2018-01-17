@@ -6,6 +6,8 @@ function initializeApp() {
 }
 
 function changeScreen(){
+	// var zipCode = $(".form-control").val();
+	// console.log(zipCode);
     $("#introPage").fadeOut(1000);
     display = new Display();
     display.init();
@@ -76,7 +78,7 @@ function Display() {
 		var showTimes = $("<button>", {
 			type: "button",
 			class: "btn btn-info btn-md",
-			text: "Show Movie Times",
+			text: "Movie Times",
 			'data-target': 'showTimesModal',
 			'data-toggle': "modal",
 			on: {
@@ -97,10 +99,10 @@ function Display() {
 		});
 		container.append(foodInfo);
 
-		var title = $('<div>', {
-			class: 'footer'
-		});
-		container.append(title);
+		// var title = $('<div>', {
+		// 	class: 'footer'
+		// });
+		// container.append(title);
 	}
 
 }
