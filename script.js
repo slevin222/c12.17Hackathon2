@@ -97,6 +97,7 @@ let display = {
 			type: "button",
 			class: "btn btn-info btn-md",
 			text: "Show Theatres",
+            id: "showBtn",
 			'data-target': 'theatreModal',
 			'data-toggle': "modal",
 			on: {
@@ -111,6 +112,7 @@ let display = {
 			type: "button",
 			class: "btn btn-info btn-md",
 			text: "Show Movie Times",
+            id: "timesBtn",
 			'data-target': 'showTimesModal',
 			'data-toggle': "modal",
 			on: {
