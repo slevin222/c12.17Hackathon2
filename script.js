@@ -333,8 +333,16 @@ let movies = {
                             let str = String(trailer);
 
                             let res = str.replace("watch?v=", "embed/");
+
+                            $('#video').attr('src', res);
+                        });
+                        currentMovie.on('click', function () {
+                            movies.currentMovieId = this.movie.id;
+                            console.log(this.movie.id);
+
                             console.log(str);
                             $('#video').attr('src', str);
+
                         });
                     }
                 }
