@@ -1,19 +1,18 @@
 $(document).ready(initializeApp);
 
 function initializeApp() {
-    display = new Display();
-    display.init();
-    initMap();
+	display = new Display();
+	display.init();
+	initMap();
 }
 
 function Display() {
     this.foodArray = ['./images/pizza.svg', './images/noodles.svg', './images/taco.svg','./images/sushi.svg','./images/Burger.svg','./images/Coffee.svg','./images/Beer.svg'];
-
-
+  
     this.init = function () {
         this.display();
     };
-
+  
     this.display = function () {
         container = $("#container");
 
@@ -93,98 +92,46 @@ var infowindow;
 
 function initMap() {
 
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			var pos = {
+				lat: position.coords.latitude,
+				lng: position.coords.longitude
+			};
+			console.log(pos);
+			yelp.yelpData(pos.lat, pos.lng);
 
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
+			var current = {
+				lat: pos.lat,
+				lng: pos.lng
+			};
+			// var current = navigator.geolocation;
 
+			var map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 15,
+				center: current
+			});
+			var marker = new google.maps.Marker({
+				position: current,
+				map: map
+			});
 
-            };
-            console.log(pos)
-
-            var current = {lat: pos.lat, lng: pos.lng};
-            // var current = navigator.geolocation;
-
-            var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 15,
-                center: current
-            });
-            var marker = new google.maps.Marker({
-                position: current,
-                map: map
-            });
-
-            // var infoWindow = new google.maps.InfoWindow;
-            //
-            // infoWindow.setPosition(pos);
-            // infoWindow.setContent('Location found.');
-            // infoWindow.open(map);
-            map.setCenter(pos);
-        }, function () {
-            handleLocationError(true, infoWindow, map.getCenter());
-        });
-    } else {
-        // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
-    }
-
-
+			// var infoWindow = new google.maps.InfoWindow;
+			//
+			// infoWindow.setPosition(pos);
+			// infoWindow.setContent('Location found.');
+			// infoWindow.open(map);
+			map.setCenter(pos);
+		}, function() {
+			handleLocationError(true, infoWindow, map.getCenter());
+		});
+	} else {
+		// Browser doesn't support Geolocation
+		handleLocationError(false, infoWindow, map.getCenter());
+	}
 }
 
-
-// var map;
-// var infowindow;
-
-//needs to call function initMap because
-//
-// function initMap() {
-//     var current = {lat: 33.6441211395679, lng: -117.743128531307};
-//
-//     var map = new google.maps.Map(document.getElementById('map'), {
-//         center: current,
-//         zoom: 17
-//     });
-//
-//     var infowindow = new google.maps.InfoWindow();
-//     var service = new google.maps.places.PlacesService(map);
-//     service.nearbySearch({
-//         location: current,
-//         radius: 500,
-//         type: ['bank']
-//     }, callback);
-// }
-//
-//
-// function callback(results, status) {
-//     if (status === google.maps.places.PlacesServiceStatus.OK) {
-//         for (var i = 0; i < results.length; i++) {
-//             createMarker(results[i]);
-//         }
-//     }
-// }
-//
-// function createMarker(place) {
-//     var placeLoc = place.geometry.location;
-//     var marker = new google.maps.Marker({
-//         map: map,
-//         position: place.geometry.location
-//     });
-//
-//     //how to add information to marker
-//
-//     google.maps.event.addListener(marker, 'click', function() {
-//         infowindow.setContent(place.name);
-//         infowindow.open(map, this);
-//     });
-//
-//
-// }
-//
-
 function Movie() {
-
     this.movieDataFrontPage = function () {
         var ajaxConfig = {
             data: {
@@ -296,10 +243,7 @@ function GetYelpData() {
             console.log(data.businesses[dataIndex].categories);
         }
     }
-
 }
 
 var yelp = new GetYelpData();
-yelp.yelpData();
-
 movies.cinemaDataSearch();
