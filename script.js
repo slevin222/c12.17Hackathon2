@@ -117,9 +117,9 @@ function Display() {
         let foodButton = $('<input>', {
             type: "button",
             click: function () {
-                var term = $('.foodInput').val();
-                var location = $('.locationInput').val();
-                placeMarker(location, term);
+                let foodType = $('.foodInput').val();
+                let location = $('.locationInput').val();
+                placeMarker(location, foodType);
             },
             value: "Submit"
         });
@@ -318,7 +318,7 @@ let movies = {
                 if (!result) {
                     console.log("Something went wrong");
                 } else {
-                   console.log(result);
+                    console.log(result);
                 }
             },
             error: function (result) {
@@ -328,30 +328,30 @@ let movies = {
         $.ajax(ajaxConfig);
     },
 
-    setDate : function(){
-            let now     = new Date();
-            let year    = now.getFullYear();
-            let month   = now.getMonth()+1;
-            let day     = now.getDate();
-            let hour    = now.getHours();
-            let minute  = now.getMinutes();
-            let second  = now.getSeconds();
-            if(month.toString().length == 1) {
-                let month = '0'+month;
-            }
-            if(day.toString().length == 1) {
-                let day = '0'+day;
-            }
-            if(hour.toString().length == 1) {
-                let hour = '0'+hour;
-            }
-            if(minute.toString().length == 1) {
-                let minute = '0'+minute;
-            }
-            if(second.toString().length == 1) {
-                let second = '0'+second;
-            }
-            return year+'-'+month+'-'+day+'T'+hour+':'+minute+':'+second+"-08:00";
+    setDate: function () {
+        let now = new Date();
+        let year = now.getFullYear();
+        let month = now.getMonth() + 1;
+        let day = now.getDate();
+        let hour = now.getHours();
+        let minute = now.getMinutes();
+        let second = now.getSeconds();
+        if (month.toString().length == 1) {
+            let month = '0' + month;
+        }
+        if (day.toString().length == 1) {
+            let day = '0' + day;
+        }
+        if (hour.toString().length == 1) {
+            let hour = '0' + hour;
+        }
+        if (minute.toString().length == 1) {
+            let minute = '0' + minute;
+        }
+        if (second.toString().length == 1) {
+            let second = '0' + second;
+        }
+        return year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second + "-08:00";
     }
 };
 
