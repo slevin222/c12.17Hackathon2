@@ -5,6 +5,7 @@ function initializeApp() {
 	display.init();
 	initMap();
 }
+var restarurantLocation = [];
 
 function Display() {
     this.foodArray = ['./images/pizza.svg', './images/noodles.svg', './images/taco.svg','./images/sushi.svg','./images/Burger.svg','./images/Coffee.svg','./images/Beer.svg'];
@@ -86,51 +87,72 @@ function Display() {
 
 
 
+
+
 var map;
-var infowindow;
+
+// var infowindow;
 
 //needs to call function initMap because
 
 function initMap() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
 
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(function(position) {
-			var pos = {
-				lat: position.coords.latitude,
-				lng: position.coords.longitude
-			};
-			console.log(pos);
-			yelp.yelpData(pos.lat, pos.lng);
 
-			var current = {
-				lat: pos.lat,
-				lng: pos.lng
-			};
-			// var current = navigator.geolocation;
+            };
+            console.log(pos)
 
-			var map = new google.maps.Map(document.getElementById('map'), {
-				zoom: 15,
-				center: current
-			});
-			var marker = new google.maps.Marker({
-				position: current,
-				map: map
-			});
+            var current = {lat: pos.lat, lng: pos.lng};
+            // var current = navigator.geolocation;
 
-			// var infoWindow = new google.maps.InfoWindow;
-			//
-			// infoWindow.setPosition(pos);
-			// infoWindow.setContent('Location found.');
-			// infoWindow.open(map);
-			map.setCenter(pos);
-		}, function() {
-			handleLocationError(true, infoWindow, map.getCenter());
-		});
-	} else {
-		// Browser doesn't support Geolocation
-		handleLocationError(false, infoWindow, map.getCenter());
-	}
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 13,
+                center: current
+            });
+            var marker = new google.maps.Marker({
+                position: current,
+                map: map
+            });
+
+            map.setCenter(pos);
+        }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+        });
+
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
+    }
+    // Create an array of alphabetical characters used to label the markers.
+    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var locations = [
+
+        {lat: 33.6447809695316, lng: -117.74444454841},
+        {lat: 33.6514285646533, lng: -117.746069293683},
+        {lat: 33.620624, lng: -117.699047},
+        {lat: 33.6220781, lng: -117.684251},
+        {lat: 33.62161, lng: -117.73214},
+    ];
+
+
+    var markers = locations.map(function(location, i) {
+        return new google.maps.Markers({
+            position: location,
+            label: labels[i % labels.length]
+        });
+    });
+
+// Add a marker clusterer to manage the markers.
+    var markerCluster = new MarkerClusterer(map, markers,
+        {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'})
+
+
 }
+
 
 
 function Movie() {
@@ -217,6 +239,7 @@ function Movie() {
 var movies = new Movie();
 
 function GetYelpData() {
+
     this.yelpData = function (long, lat) {
         $.ajax({
             url: "http://danielpaschal.com/yelpproxy.php",
@@ -245,6 +268,7 @@ function GetYelpData() {
             console.log(data.businesses[dataIndex].categories);
         }
     }
+
 }
 
 var yelp = new GetYelpData();
