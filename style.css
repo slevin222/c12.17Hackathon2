@@ -121,6 +121,22 @@ p{
     margin: 0 2% 0 2%;
 }
 
+<<<<<<< HEAD
+
+
+
+/**/
+
+.bs-example{
+    margin: 20px;
+}
+.modal-content iframe{
+    margin: 0 auto;
+    display: block;
+}
+
+/**/
+=======
 @media screen and (max-width: 780px) {
     .movie{
         height: 25%;
@@ -174,3 +190,4 @@ p{
         margin: .5% 0 0 0;
     }
 }
+>>>>>>> 791203f2b1da489be21785d70814cffbe8b31493
