@@ -243,7 +243,7 @@ function Movie() {
 							'background-image': "url('" + currentMovie[0].movie.poster_image + "')"
 						});
 						currentMovie.on('mouseover', function() {
-							$('.movieInfoTitle').text(this.movie.title);
+							$('.movieInfoTitle').text(this.movie.title).css("font-weight", "bold");
 							$('.movieInfoSyn').text(this.movie.synopsis);
 							$('.movieInfoPics').empty();
 							for (var i = 0; i < this.movie.scene_images.length && i < 3; i++) {
