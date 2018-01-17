@@ -5,7 +5,10 @@ function initializeApp() {
     $("#container").hide();
 }
 
-function changeScreen() {
+
+function changeScreen(){
+	// var zipCode = $(".form-control").val();
+	// console.log(zipCode);
     $("#introPage").fadeOut(1000);
     display = new Display();
     display.init();
@@ -117,11 +120,8 @@ function Display() {
             value: "Submit"
         })
         foodInfo.append(foodInput, locationInput, foodButton)
-        var title = $('<div>', {
-            class: 'footer'
-        });
-        container.append(title);
     }
+
 
 }
 
@@ -290,6 +290,7 @@ function Movie() {
         };
         $.ajax(ajaxConfig);
     };
+
 }
 
 function GetYelpData() {
