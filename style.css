@@ -6,6 +6,35 @@ body{
     user-select: none;
 
 }
+#introPage{
+    height: 100%;
+    width: 100%;
+    background-color: black;
+}
+#backGround{
+    background-image: url("images/dinnerAndAMovie.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height:90%;
+    width: 100%;
+}
+#enter{
+    height: 9%;
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+.input-group{
+    width: 20%;
+    left: 40%;
+}
+
+p{
+    color: ghostwhite;
+}
 
 #container{
     height: 100%;
