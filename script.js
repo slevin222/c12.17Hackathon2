@@ -52,21 +52,33 @@ function Display() {
 
         movieInfo.append(movieInfoPics);
 
-        var trailerButton = $("<button>", {
+        var theatreButton = $("<button>", {
             type: "button",
-            class: "btn btn-info btn-lg",
-            text: "Show Movie Trailer",
-            'data-target': 'trailerModal',
+            class: "btn btn-info btn-md",
+            text: "Show Theatres",
+            'data-target': 'theatreModal',
             'data-toggle': "modal",
             on: {
                 click: function () {
-                    $('#trailerModal').modal('show');
+                    $('#theatreModal').modal('show');
                 }
             }
         });
 
-        movieInfo.append(trailerButton);
-
+        movieInfo.append(theatreButton);
+        var showTimes = $("<button>", {
+            type: "button",
+            class: "btn btn-info btn-md",
+            text: "Show Movie Times",
+            'data-target': 'showTimesModal',
+            'data-toggle': "modal",
+            on: {
+                click: function () {
+                    $('#showTimesModal').modal('show');
+                }
+            }
+        });
+        movieInfo.append(showTimes);
         var displayMap = $('<div>', {
             class: 'displayMap',
             id: 'map'
@@ -86,54 +98,16 @@ function Display() {
 }
 
 
-// var map;
-var infowindow;
+
+
+
+var map;
+
+// var infowindow;
 
 //needs to call function initMap because
 
 function initMap() {
-<<<<<<< HEAD
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(function(position) {
-			var pos = {
-				lat: position.coords.latitude,
-				lng: position.coords.longitude
-			};
-			console.log(pos);
-			yelp.yelpData(pos.lat, pos.lng);
-
-			var current = {
-				lat: pos.lat,
-				lng: pos.lng
-			};
-			// var current = navigator.geolocation;
-
-			var map = new google.maps.Map(document.getElementById('map'), {
-				zoom: 15,
-				center: current[0]
-			});
-
-			var marker = new google.maps.Marker({
-				position: current,
-				map: map
-			});
-
-			// var infoWindow = new google.maps.InfoWindow;
-			//
-			// infoWindow.setPosition(pos);
-			// infoWindow.setContent('Location found.');
-			// infoWindow.open(map);
-			map.setCenter(pos);
-		}, function() {
-			handleLocationError(true, infoWindow, map.getCenter());
-		});
-	} else {
-		// Browser doesn't support Geolocation
-		handleLocationError(false, infoWindow, map.getCenter());
-	}
-
-=======
-
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             var pos = {
@@ -187,7 +161,7 @@ function initMap() {
 // Add a marker clusterer to manage the markers.
     var markerCluster = new MarkerClusterer(map, markers,
         {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'})
->>>>>>> 0a7d72299650b96e48184f70a4041553984be074
+
 
 }
 
@@ -277,46 +251,7 @@ function Movie() {
 var movies = new Movie();
 
 function GetYelpData() {
-<<<<<<< HEAD
-	this.yelpData = function(lat, long) {
-		$.ajax({
-			url: "http://danielpaschal.com/yelpproxy.php",
-			method: "GET",
-			dataType: "JSON",
-			data: {
-				api_key: "dYgZH0Ww1s8M1O3ERoy1zlO76NJdF5SCsCvZ7JcK2E7-9JQ2n2GFVQdNweumwfphSpCOKCB-GdhKe0kdNeepo7J91qE78gAJzDidYLCMGWEKaq6TK6kBS_Z2JvNcWnYx",
-				term: "mexican restaurant",
-				latitude: lat,
-				longitude: long,
-				limit: 5,
-				radius: 8046
-			},
-			success: (response) => {
-				console.log(response);
-				let dataObj = response;
-				this.getData(dataObj);
-			},
-			error: (response) => {
-				console.log(response);
-			}
 
-		})
-	};
-	this.getData = function(data) {
-		for (let dataIndex = 0; dataIndex < data.businesses.length; dataIndex++) {
-			this.addCoordintes(data.businesses[dataIndex]);
-		}
-	}
-	this.addCoordintes = function(data) {
-		let dataObj = {};
-		dataObj.lat = data.coordinates.latitude;
-		dataObj.lng = data.coordinates.longitude;
-		restarurantLocation.push(dataObj);
-		/*call the marker making function to set the different markers */
-		console.log(dataObj);
-	}
-
-=======
     this.yelpData = function (long, lat) {
         $.ajax({
             url: "http://danielpaschal.com/yelpproxy.php",
@@ -345,7 +280,7 @@ function GetYelpData() {
             console.log(data.businesses[dataIndex].categories);
         }
     }
->>>>>>> 0a7d72299650b96e48184f70a4041553984be074
+
 }
 
 var yelp = new GetYelpData();
