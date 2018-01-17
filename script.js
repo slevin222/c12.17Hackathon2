@@ -96,7 +96,7 @@ let display = {
 			type: "button",
 			class: "btn btn-info btn-md",
 			text: "Show Theatres",
-            id: "showBtn",
+			id: "showBtn",
 			'data-target': 'theatreModal',
 			'data-toggle': "modal",
 			on: {
@@ -111,7 +111,7 @@ let display = {
 			type: "button",
 			class: "btn btn-info btn-md",
 			text: "Show Movie Times",
-            id: "timesBtn",
+			id: "timesBtn",
 			'data-target': 'showTimesModal',
 			'data-toggle': "modal",
 			on: {
@@ -121,7 +121,7 @@ let display = {
 			}
 		});
 
-        movieInfo.append(showTimes);
+		movieInfo.append(showTimes);
 
 		let displayMap = $('<div>', {
 			class: 'displayMap',
@@ -134,16 +134,18 @@ let display = {
 		container.append(foodInfo);
 		for (let h = 1; h < 6; h++) {
 			let foodPlace = $('<div>', {
-				class: "foodPlace" + h,
-				id: "foodPlace"
+				id: "foodPlace" + h,
+				class: "foodPlace"
 			})
 			foodInfo.append(foodPlace);
 		}
 		let foodInput = $('<input>', {
 			type: "text",
 			name: "genre",
+			placeholder: "Enter food type",
 			class: "foodInput"
 		});
+
 		// let locationInput = $('<input>', {
 		// 	type: "text",
 		// 	name: "zipCode",
@@ -152,6 +154,7 @@ let display = {
 		// });
 		let foodButton = $('<input>', {
 			type: "button",
+			class: "btn btn-info btn-md",
 			click: function() {
 				let term = $('.foodInput').val();
 				placeMarker(currentLocation, term);
@@ -159,16 +162,16 @@ let display = {
 			value: "Submit"
 		});
 		foodInfo.append(foodInput, foodButton);
-		let title = $('<div>', {
-			class: 'footer'
-		});
-		container.append(title);
+		// let title = $('<div>', {
+		// 	class: 'footer'
+		// });
+		// container.append(title);
 
 
 	}
 }
 
-// function getTerm() {
+// function getTerm() {}
 
 
 
@@ -190,7 +193,7 @@ function initMap() {
 		// 		let term = $('.foodInput').val();
 		// 		placeMarker(event.latLng, term);
 		// 	})
-		$('.foodPlace').text('');
+		$('#foodPlace').text('');
 		let term = $('.foodInput').val();
 		clearMarkers();
 		placeMarker(event.latLng, term);
@@ -480,9 +483,15 @@ function GetYelpData() {
 				lng: data.businesses[dataIndex].coordinates.longitude
 			};
 			let name = data.businesses[dataIndex].name;
+			//	name = name.link(data.businesses[dataIndex].url)
 			console.log("this is single" + restaurant);
 			restaurantLocation.push(restaurant);
-			$('.foodPlace' + (dataIndex + 1)).text(name);
+			let aTag = $("<a>", {
+				"href": data.businesses[dataIndex].url,
+				"target": '_blank',
+				text: name
+			});
+			$('#foodPlace' + (dataIndex + 1)).append(aTag);
 		}
 		console.log("the whole" + restaurantLocation);
 		dropRestaurant(restaurantLocation);
