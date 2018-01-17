@@ -119,67 +119,20 @@ function initMap() {
 		}
 	});
 	google.maps.event.addListener(map, 'click', function(event) {
-		placeMarker(event.latLng);
+        clearMarkers();
+	    placeMarker(event.latLng);
 	});
+    drop([{'lat': 33.6441211395679, 'lng': -117.743128531307}]);
+
 }
 
-
-    // if (navigator.geolocation) {
-    //     navigator.geolocation.getCurrentPosition(function(position) {
-    //         var pos = {
-    //             lat: position.coords.latitude,
-    //             lng: position.coords.longitude
-    //
-    //         };
-    //         console.log(pos)
-    //
-    //         var current = {lat: pos.lat, lng: pos.lng};
-    //         // var current = navigator.geolocation;
-    //
-    //         var map = new google.maps.Map(document.getElementById('map'), {
-    //             zoom: 13,
-    //             center: current
-    //         });
-    //         var marker = new google.maps.Marker({
-    //             position: current,
-    //             map: map
-    //         });
-    //
-    //         map.setCenter(pos);
-    //     }, function() {
-    //         handleLocationError(true, infoWindow, map.getCenter());
-    //     });
-    //
-    // } else {
-    //     // Browser doesn't support Geolocation
-    //     handleLocationError(false, infoWindow, map.getCenter());
-    // }
-    //
-    // function createMakers(results) {
-    //     for (var i = 0; i < results.length; i++) {
-    //         var coords = results[i];
-    //         var latLng = new google.maps.LatLng(coords[1], coords[0]);
-    //         var marker = new google.maps.Marker({
-    //             position: latLng,
-    //             map: map
-    //         });
-    //     }
-    // }
-    //
-    //
-    //
-    // var results = [
-    //
-    //     {lat: 33.6447809695316, lng: -117.74444454841},
-    //     {lat: 33.6514285646533, lng: -117.746069293683},
-    //     {lat: 33.620624, lng: -117.699047},
-    //     {lat: 33.6220781, lng: -117.684251},
-    //     {lat: 33.62161, lng: -117.73214},
-    // ];
-    //
-    // createMakers(results);
-
-
+// function initialDrop(zip){
+//     markers.push(new google.maps.Marker({
+//         position: zip,
+//         map: map,
+//         animation: google.maps.Animation.DROP
+//     }));
+// }
 
 function drop(array) {
 	clearMarkers();
@@ -194,12 +147,10 @@ function addMarkerWithTimeout(position, timeout) {
 		markers.push(new google.maps.Marker({
 			position: position,
 			map: map,
-			icon: 'https://findicons.com/files/icons/2166/oxygen/128/applications_toys.png',
 			animation: google.maps.Animation.DROP
 		}));
 	}, timeout);
 }
-
 
 function clearMarkers() {
 	for (var i = 0; i < markers.length; i++) {
@@ -209,11 +160,14 @@ function clearMarkers() {
 }
 
 function placeMarker(location) {
-	clearMarkers();
-	var marker = new google.maps.Marker({
+    markers.push(new google.maps.Marker({
 		position: location,
-		map: map
-	});
+		map: map,
+        animation: google.maps.Animation.DROP
+	}));
+    var locString = location.lat()+","+location.lng();
+    movies.cinemaDataSearch(locString);
+    yelp.yelpData(location.lat(), location.lng())
 }
 
 
@@ -280,17 +234,17 @@ function Movie() {
 					console.log("Something went wrong");
 				} else {
 					console.log(result);
-					var cinemaLocations = [];
-					for (var i = 0; i < result.cinemas.length; i++) {
-						let cinema = {
-							lat: result.cinemas[i].location.lat,
-							lng: result.cinemas[i].location.lon
-						};
-						console.log(cinema);
-						cinemaLocations.push(cinema);
-					}
-					console.log(cinemaLocations);
-					drop(cinemaLocations);
+                    var cinemaLocations = [];
+                    for (var i = 0; i < result.cinemas.length; i++) {
+                        let cinema = {
+                            lat: result.cinemas[i].location.lat,
+                            lng: result.cinemas[i].location.lon
+                        };
+                        console.log(cinema);
+                        cinemaLocations.push(cinema);
+                    }
+                    console.log(cinemaLocations);
+                    drop(cinemaLocations);
 				}
 			},
 			error: function(result) {
@@ -301,11 +255,9 @@ function Movie() {
 	};
 }
 
-var movies = new Movie();
-
 function GetYelpData() {
 
-	this.yelpData = function(long, lat) {
+	this.yelpData = function(lat, lng) {
 		$.ajax({
 			url: "http://danielpaschal.com/yelpproxy.php",
 			method: "GET",
@@ -313,8 +265,8 @@ function GetYelpData() {
 			data: {
 				api_key: "dYgZH0Ww1s8M1O3ERoy1zlO76NJdF5SCsCvZ7JcK2E7-9JQ2n2GFVQdNweumwfphSpCOKCB-GdhKe0kdNeepo7J91qE78gAJzDidYLCMGWEKaq6TK6kBS_Z2JvNcWnYx",
 				term: "mexican restaurant",
-				latitude: 33.6441211395679,
-				longitude: -117.743128531307,
+				latitude: lat,
+				longitude: lng,
 				limit: 5,
 				radius: 8046
 			},
@@ -335,6 +287,5 @@ function GetYelpData() {
 	}
 
 }
-
+var movies = new Movie();
 var yelp = new GetYelpData();
-movies.cinemaDataSearch();
