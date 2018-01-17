@@ -1,11 +1,17 @@
 $(document).ready(initializeApp);
 
 function initializeApp() {
-	display = new Display();
-	display.init();
-	initMap();
+    $(".btn-primary").click(changeScreen);
+    $("#container").hide();
 }
 
+function changeScreen(){
+    $("#introPage").fadeOut(1000);
+    display = new Display();
+    display.init();
+    initMap();
+    $("#container").fadeIn(1000);
+}
 
 function Display() {
 
@@ -96,6 +102,7 @@ function Display() {
 		});
 		container.append(title);
 	}
+
 }
 
 
