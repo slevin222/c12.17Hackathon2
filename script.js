@@ -95,22 +95,8 @@ let display =  {
 			}
 		});
 
-		// trailer
-		let trailerButton = $("<button>", {
-			type: "button",
-			class: "btn btn-info btn-md",
-            text: "Trailer",
-            'data-target': 'trailerModal',
-            'data-toggle': "modal",
-			on: {
-				click: function(){
-                    $('#trailerModal').modal('show');
-				}
-			}
-		});
-        movieInfo.append(trailerButton);
-        
-		movieInfo.append(showTimes);
+        movieInfo.append(showTimes);
+
 		let displayMap = $('<div>', {
 			class: 'displayMap',
 			id: 'map'
@@ -244,13 +230,14 @@ let movies = {
                     console.log("We have empty results or something went wrong");
                 }  else {
                     console.log(result);
-                    trailer = $('#jumanji').attr('src');
-                    $("#myModal").on('hide.bs.modal', function () {
-                        $("#jumanji").attr('src', '');
-                    });
-                    $("#myModal").on('show.bs.modal', function () {
-                        $("#jumanji").attr('src', trailer);
-                    });
+                    // trailer = $('#jumanji').attr('src');
+                    // $("#myModal").on('hide.bs.modal', function () {
+                    //     $("#jumanji").attr('src', '');
+                    // });
+                    // $("#myModal").on('show.bs.modal', function () {
+                    //     $("#jumanji").attr('src', trailer);
+                    // });
+                    //
 
                     for (let movieDataIndex = 0; movieDataIndex < 10; movieDataIndex++) {
                         let currentMovie = $('#movie' + (movieDataIndex + 1));
@@ -258,9 +245,22 @@ let movies = {
                         currentMovie.css({
                             'background-image': "url('" + currentMovie[0].movie.poster_image + "')"
                         });
-                        // currentMovie.on('mouseover', function () {
-                        //
-                        // });
+                        currentMovie.on('mouseover', function () {
+                            // trailer
+                            let trailerButton = $("<button>", {
+                                type: "button",
+                                class: "btn btn-info btn-md",
+                                text: "Trailer",
+                                'data-target': 'trailerModal',
+                                'data-toggle': "modal",
+                                on: {
+                                    click: function(){
+                                        $('#trailerModal').modal('show');
+                                    }
+                                }
+                            });
+                            currentMovie.append(trailerButton);
+                        });
                         currentMovie.on('click', function () {
                             $('.movieInfoTitle').text(this.movie.title);
                             $('.movieInfoSyn').text(this.movie.synopsis);
@@ -272,6 +272,10 @@ let movies = {
                             console.log(this.movie.id);
 
                             ////// MOVIE TRAILER ///////
+
+
+
+
                             let movieTrailer = result.movies;
                             let trailer = movieTrailer[movieDataIndex].trailers[0].trailer_files[0].url;
                             let str = String(trailer);
