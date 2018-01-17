@@ -35,7 +35,7 @@ body{
 .foodType6,
 .foodType7{
     height: 20%;
-    width: 13.5%;
+    width: 11%;
     /*background-color: blue;*/
     margin: 1% 0 0 0;
     display: inline-flex;
@@ -87,4 +87,9 @@ body{
 
 #map{
 
+}
+
+.modal-body a{
+    height: 100%;
+    width: 100%;
 }
