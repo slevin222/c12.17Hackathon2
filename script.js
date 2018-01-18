@@ -257,6 +257,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 
 function dropCinema(array) {
 	for (let i = 0; i < array.length; i++) {
+
 		(function() {
 			let marker = new google.maps.Marker({
 				position: array[i],
@@ -273,6 +274,7 @@ function dropCinema(array) {
 					'class': 'col-sm-8',
 					'text': movies.currentCinemas[i]
 				});
+				// $(".movie-title").text(movies.currentCinemas[i].name);
 			});
 		})(markers[i]);
 	}
@@ -451,8 +453,11 @@ let movies = {
 							lng: result.cinemas[i].location.lon
 						};
 						cinemaLocations.push(cinema);
+                        // $(".modal2-body").text(movies.currentCinemas[i].name);
+                        // $(".modal3-body").text(movies.currentCinemas[i].showtimes.showtimes[i]);
 					}
 					console.log(movies.currentCinemas);
+
 					dropCinema(cinemaLocations);
 				}
 			},
