@@ -1,20 +1,32 @@
 $(document).ready(initializeApp);
 
 function initializeApp() {
-	$(".btn-primary").click(changeScreen);
+	$(".btn-primary").on("click", changeScreen);
 	$("#container").hide();
+	// $("#instructions").hide();
 }
 
 
 function changeScreen() {
-	// var zipCode = $(".form-control").val();
-	// console.log(zipCode);
-	$("#introPage").fadeOut(1000);
-	display.init();
-	initMap();
-	$("#container").fadeIn(1000);
-}
+    $(".btn-primary").off("click");
+    display.init();
+    initMap();
+    $("#container").show();
+    $("#introPage").fadeOut(1000);
+    // $("#enterMain").on('click', exitInstructions);
+    // $("#instructions").fadeIn(1000);
 
+}
+//
+// function exitInstructions(){
+//     $("#instructions").fadeOut(1000);
+//     display.init();
+//     initMap();
+//     $("#container").show();
+// }
+
+let theatreLocations = [];
+let theatreAddresses = [];
 let display = {
 
 	foodObject: [{
@@ -101,6 +113,18 @@ let display = {
 			on: {
 				click: function() {
 					$('#theatreModal').modal('show');
+					for( let i =0; i < theatreLocations.length; i++){
+					    let locationText = $("<h4>",{
+					       class: "modalTheatre",
+                           text: theatreLocations[i],
+                        });
+					    $(".modal2-body").append(locationText);
+					    let addressModal = $("<p>",{
+					        class: "modalAddress",
+                            text: theatreAddresses[i]
+                        });
+					    locationText.append(addressModal);
+                    }
 				}
 			}
 		});
@@ -131,12 +155,13 @@ let display = {
 			class: 'foodInfo'
 		});
 		container.append(foodInfo);
-		for (let h = 1; h < 6; h++) {
+		for (let h = 1; h < 7; h++) {
 			let foodPlace = $('<div>', {
 				id: "foodPlace" + h,
 				class: "foodPlace"
 			});
 			foodInfo.append(foodPlace);
+			$("#foodPlace6").text("Click on the restaurant name for more info");
 		}
 		let foodInput = $('<input>', {
 			type: "text",
@@ -145,12 +170,6 @@ let display = {
 			class: "foodInput"
 		});
 
-		// let locationInput = $('<input>', {
-		// 	type: "text",
-		// 	name: "zipCode",
-		// 	class: "locationInput",
-		// 	placeholder: "Input Zipcode"
-		// });
 		let foodButton = $('<input>', {
 			type: "button",
 			class: "btn btn-info btn-md",
@@ -162,11 +181,6 @@ let display = {
 			value: "Submit"
 		});
 		foodInfo.append(foodInput, foodButton);
-		// let title = $('<div>', {
-		// 	class: 'footer'
-		// });
-		// container.append(title);
-
 
 	}
 };
@@ -328,7 +342,7 @@ let movies = {
 				if (!result) {
 					console.log("We have empty results or something went wrong");
 				} else {
-					console.log(result);
+				    console.log(result);
 					for (let movieDataIndex = 0; movieDataIndex < 10; movieDataIndex++) {
 						let currentMovie = $('#movie' + (movieDataIndex + 1));
 						currentMovie[0].movie = result.movies[movieDataIndex];
@@ -390,6 +404,7 @@ let movies = {
 	},
 
 	cinemaDataSearch: function(location) {
+
 		let ajaxConfig = {
 			data: {
 				location: location,
@@ -408,10 +423,12 @@ let movies = {
 				if (!result) {
 					console.log("Something went wrong");
 				} else {
+				    console.log("result: "+result.cinemas[0]);
 					var currentCinemasLocation = [];
 					for (let i = 0; i < result.cinemas.length; i++) {
 						movies.currentCinemas.push(result.cinemas[i]);
-
+                        theatreAddresses.push(result.cinemas[i].location.address.display_text);
+                        theatreLocations.push(result.cinemas[i].name);
 						movies.fetchShowTimes(i).then((response) => {
 							result.cinemas[i].showTimes = response;
 							let cinema = {
@@ -420,6 +437,7 @@ let movies = {
 							};
 							currentCinemasLocation.push(cinema);
 							dropCinema(currentCinemasLocation);
+                            console.log("cinemas :"+movies.currentCinemas[0]);
 						}, (err) => {
 							console.log("Error in cinemaDataSearch: ", err)
 						})
