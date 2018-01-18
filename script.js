@@ -68,7 +68,13 @@ let display = {
 				id: 'foodType' + x,
 				class: 'foodType',
 				number: (x - 1),
-				click: getTerm
+				click: getTerm,
+                on:{
+				    click: function(){
+                        $('.foodType').css('border', 'hidden');
+                        $(this).css('border', '1px white solid');
+                    }
+                }
 			});
 			foodRow.css('background-image', "url('" + this.foodObject[x - 1].img + "')");
 			container.append(foodRow);
@@ -77,6 +83,31 @@ let display = {
 			class: 'movieInfo',
 		});
 		container.append(movieInfo);
+		var showTimes = $('<div>',{
+		    'class': 'showTimes',
+            css:{
+		        'display': 'none'
+            }
+        });
+        container.append(showTimes);
+		for(let i = 0 ; i < 4 ; i++){
+            var movieTitle = $('<div>', {'id' : 'movieTitle'+i, 'class': 'movieTitles'});
+		    showTimes.append(movieTitle);
+		    var showTimesDiv = $('<div>',{'id' : 'movieShowTimes'+i, 'class':'showTimesShowTimes'});
+            showTimes.append(showTimesDiv);
+        }
+        let showTimesBtn = $('<button>', {
+            type: 'button',
+            class: 'btn btn-default',
+            text: 'Show Movie Info',
+            on: {
+                'click': function(){
+                    $('.showTimes').hide();
+                    $('.movieInfo').show();
+                }
+            }
+        });
+        showTimes.append(showTimesBtn);
 		let movieInfoTitle = $('<div>', {
 			class: 'movieInfoTitle',
 		});
@@ -91,36 +122,21 @@ let display = {
 
 		movieInfo.append(movieInfoPics);
 
-		let theatreButton = $("<button>", {
+		let showTimesButton = $("<button>", {
 			type: "button",
-			class: "btn btn-info btn-md",
-			text: "Show Theatres",
-			id: "showBtn",
-			'data-target': 'theatreModal',
-			'data-toggle': "modal",
-			on: {
-				click: function() {
-					$('#theatreModal').modal('show');
-				}
-			}
-		});
-
-		movieInfo.append(theatreButton);
-		let showTimes = $("<button>", {
-			type: "button",
-			class: "btn btn-info btn-md",
+			class: "btn btn-default",
 			text: "Show Movie Times",
 			id: "timesBtn",
-			'data-target': 'showTimesModal',
-			'data-toggle': "modal",
+            css: {"display" : "none", "text-align": "center"},
 			on: {
 				click: function() {
-					$('#showTimesModal').modal('show');
+					$('.showTimes').show();
+					$('.movieInfo').hide();
 				}
 			}
 		});
 
-		movieInfo.append(showTimes);
+		movieInfo.append(showTimesButton);
 
 		let displayMap = $('<div>', {
 			class: 'displayMap',
@@ -145,12 +161,6 @@ let display = {
 			class: "foodInput"
 		});
 
-		// let locationInput = $('<input>', {
-		// 	type: "text",
-		// 	name: "zipCode",
-		// 	class: "locationInput",
-		// 	placeholder: "Input Zipcode"
-		// });
 		let foodButton = $('<input>', {
 			type: "button",
 			class: "btn btn-info btn-md",
@@ -162,12 +172,6 @@ let display = {
 			value: "Submit"
 		});
 		foodInfo.append(foodInput, foodButton);
-		// let title = $('<div>', {
-		// 	class: 'footer'
-		// });
-		// container.append(title);
-
-
 	}
 };
 
@@ -175,7 +179,6 @@ function getTerm() {
 	let getThisClass = $(this).attr('number');
 	$('.foodInput').val(display.foodObject[getThisClass].name);
 }
-
 
 var markers = [];
 var map;
@@ -193,7 +196,6 @@ function initMap() {
 
 	infoWindow = new google.maps.InfoWindow;
 
-
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			var pos = {
@@ -207,11 +209,7 @@ function initMap() {
 			var marker = new google.maps.Marker({
 				position: current,
 				map: map,
-				// label: "Current"
 			});
-			// infoWindow.setPosition(pos);
-			// infoWindow.setContent('Location found.');
-			// infoWindow.open(map);
 			map.setCenter(pos);
 		}, function() {
 			handleLocationError(true, infoWindow, map.getCenter());
@@ -264,6 +262,7 @@ function dropCinema(array) {
 			});
 		})(markers[i]);
 	}
+	$('#timesBtn').show();
 }
 
 function dropRestaurant(array) {
@@ -376,6 +375,8 @@ let movies = {
 								$('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
 							}
 							movies.currentMovieId = this.movie.id;
+                            $('.movie').css('border', "hidden");
+                            $(this).css('border', "1px solid white");
 						});
 					}
 				}
@@ -410,11 +411,20 @@ let movies = {
 					for (let i = 0; i < result.cinemas.length; i++) {
 						movies.currentCinemas.push(result.cinemas[i]);
 						movies.fetchShowTimes(i).then((response) => {
-							result.cinemas[i].showTimes = response;
+							result.cinemas[i].showtimes = response.showtimes;
 							let cinema = {
 								lat: result.cinemas[i].location.lat,
 								lng: result.cinemas[i].location.lon
 							};
+                            $("#movieTitle"+i).text(result.cinemas[i].name);
+                            $("#movieShowTimes"+i).empty();
+                            for( let j = 0; j < result.cinemas[i].showtimes.length ; j ++){
+                                var curShowTime = result.cinemas[i].showtimes[j].start_at;
+                                curShowTime = curShowTime.split("");
+                                curShowTime = curShowTime.splice(11,5);
+                                curShowTime = curShowTime.join("");
+                                $("#movieShowTimes"+i).append($('<span>').text(curShowTime+"   "));
+                            }
 							currentCinemasLocation.push(cinema);
 							dropCinema(currentCinemasLocation);
 						}, (err) => {
@@ -477,9 +487,7 @@ let movies = {
 		}
 		var fullDate = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second + "-08:00";
 		return fullDate;
-
 	}
-
 };
 
 function GetYelpData() {
