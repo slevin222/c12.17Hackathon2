@@ -112,7 +112,7 @@ p{
     /*background-color: darkblue;*/
     margin: .5% 0 0 0;
 }
-
+.restaurantInfo,
 .foodInfo {
     height: 44%;
     width: 25%;
@@ -123,6 +123,7 @@ p{
     padding-top: 3%;
     font-size: 2rem;
 }
+
 
 .foodPlace{
     height: 17%;
