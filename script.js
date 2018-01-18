@@ -343,6 +343,7 @@ let movies = {
 					console.log("We have empty results or something went wrong");
 				} else {
 				    console.log(result);
+				    debugger;
 					for (let movieDataIndex = 0; movieDataIndex < 10; movieDataIndex++) {
 						let currentMovie = $('#movie' + (movieDataIndex + 1));
 						currentMovie[0].movie = result.movies[movieDataIndex];
@@ -423,10 +424,13 @@ let movies = {
 				if (!result) {
 					console.log("Something went wrong");
 				} else {
-				    console.log("result: "+result.cinemas[0]);
+				    console.log(result.cinemas);
+                    console.log(result.movies);
 					var currentCinemasLocation = [];
 					for (let i = 0; i < result.cinemas.length; i++) {
 						movies.currentCinemas.push(result.cinemas[i]);
+						console.log(movies.currentMovieId[i]);
+						console.log(movies.currentCinemas[i]);
                         theatreAddresses.push(result.cinemas[i].location.address.display_text);
                         theatreLocations.push(result.cinemas[i].name);
 						movies.fetchShowTimes(i).then((response) => {
