@@ -65,11 +65,10 @@ let display = {
 
 		for (var x = 1; x < 8; x++) {
 			var foodRow = $('<div>', {
-				class: 'foodType' + x,
-				id: 'foodType',
-				click: function() {
-					getTerm();
-				}
+				id: 'foodType' + x,
+				class: 'foodType',
+				number: (x - 1),
+				click: getTerm
 			});
 			foodRow.css('background-image', "url('" + this.foodObject[x - 1].img + "')");
 			container.append(foodRow);
@@ -156,6 +155,7 @@ let display = {
 			type: "button",
 			class: "btn btn-info btn-md",
 			click: function() {
+				$('.aTag').remove();
 				let term = $('.foodInput').val();
 				placeMarker(currentLocation, term);
 			},
@@ -169,13 +169,20 @@ let display = {
 
 
 	}
-};
+}
+
+function getTerm() {
+	let getThisClass = $(this).attr('number');
+	$('.foodInput').val(display.foodObject[getThisClass].name);
+	console.log(display.foodObject);
+
+}
 
 
 var markers = [];
 var map;
 var currentLocation;
-
+var infoWindow;
 
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -185,12 +192,55 @@ function initMap() {
 			lng: -117.743128531307
 		}
 	});
+
+    infoWindow = new google.maps.InfoWindow;
+
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            var current = {lat: pos.lat, lng: pos.lng};
+            console.log(current);
+
+            var marker = new google.maps.Marker({
+                position: current,
+                map: map,
+                // label: "Current"
+            });
+
+            // infoWindow.setPosition(pos);
+            // infoWindow.setContent('Location found.');
+            // infoWindow.open(map);
+            map.setCenter(pos);
+        }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+        });
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
+    }
+
+
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ?
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
+    infoWindow.open(map);
+}
+
 	google.maps.event.addListener(map, 'click', function(event) {
 		// 	$('.foodButton').on('click', function() {
 		// 		let term = $('.foodInput').val();
 		// 		placeMarker(event.latLng, term);
 		// 	})
-		$('#foodPlace').text('');
+		$('.restaurantInfo').fadeOut();
+		$('.foodInfo').fadeIn();
+		$('.aTag').remove();
 		let term = $('.foodInput').val();
 		clearMarkers();
 		placeMarker(event.latLng, term);
@@ -444,6 +494,7 @@ let movies = {
         return fullDate;
 
     }
+
 };
 
 function GetYelpData() {
@@ -480,17 +531,16 @@ function GetYelpData() {
 			};
 			let name = data.businesses[dataIndex].name;
 			//	name = name.link(data.businesses[dataIndex].url)
-			console.log("this is single" + restaurant);
 			restaurantLocation.push(restaurant);
 			let aTag = $("<a>", {
 				"href": data.businesses[dataIndex].url,
 				"target": '_blank',
+				class: "aTag",
 				text: name
 			});
 			$('#foodPlace' + (dataIndex + 1)).append(aTag);
 		}
-		console.log("the whole" + restaurantLocation);
-		dropRestaurant(restaurantLocation);
+		dropRestaurant(restaurantLocation, data);
 	}
 }
 let testObj = {
