@@ -197,6 +197,8 @@ function initMap() {
 		// 		let term = $('.foodInput').val();
 		// 		placeMarker(event.latLng, term);
 		// 	})
+		$('.restaurantInfo').fadeOut();
+		$('.foodInfo').fadeIn();
 		$('.aTag').remove();
 		let term = $('.foodInput').val();
 		clearMarkers();
@@ -234,7 +236,7 @@ function dropCinema(array) {
 	}
 }
 
-function dropRestaurant(array) {
+function dropRestaurant(array, data) {
 	for (let i = 0; i < array.length; i++) {
 		(function() {
 			let marker = new google.maps.Marker({
@@ -245,9 +247,26 @@ function dropRestaurant(array) {
 			});
 			markers.push(marker);
 			google.maps.event.addDomListener(marker, 'click', function() {
-				// $('.movieInfo').
+				// when clicking the restaurant tags, show informations
+				// console.log(this);
+				// $('.foodInfo').fadeOut();
+				// let restaurantInfo = $('<div>', {
+				// 	class: 'restaurantInfo'
+				// });
+				// container.append(restaurantInfo);
+				// for (let k = 0; k < 5; k++) {
+				// 	let restaurantTags = $('<div>', {
+				// 		class: "restTag"
+				// 	})
+				// 	restaurantInfo.append(restaurantTags);
+				// }
+				// // let name = data.businesses[]
+				// // let phone =
+				// // 	let price =
+				// // 		let rating =
+				// // 			let open =
+				// console.log(data);
 
-				console.log("this is clickdeddfdfdfsdfads");
 			});
 		})(markers[i]);
 	}
@@ -490,7 +509,6 @@ function GetYelpData() {
 			};
 			let name = data.businesses[dataIndex].name;
 			//	name = name.link(data.businesses[dataIndex].url)
-			console.log("this is single" + restaurant);
 			restaurantLocation.push(restaurant);
 			let aTag = $("<a>", {
 				"href": data.businesses[dataIndex].url,
@@ -500,8 +518,7 @@ function GetYelpData() {
 			});
 			$('#foodPlace' + (dataIndex + 1)).append(aTag);
 		}
-		console.log("the whole" + restaurantLocation);
-		dropRestaurant(restaurantLocation);
+		dropRestaurant(restaurantLocation, data);
 	}
 }
 let testObj = {
