@@ -68,8 +68,13 @@ p{
     margin: 1% 0 0 0;
     display: inline-flex;
     background-size: cover;
+
 }
 
+.foodType:hover {
+    opacity: .3;
+
+}
 .movieInfo,
 .showTimes{
     height: 44%;
@@ -112,12 +117,12 @@ p{
     background-color: white;
 }
 
-/*#movieTitle0,*/
-/*#movieTitle1,*/
-/*#movieTitle2,*/
-/*#movieTitle3{*/
-    /*font-weight: bold;*/
-/*}*/
+#movieTitle0,
+#movieTitle1,
+#movieTitle2,
+#movieTitle3{
+    font-weight: bold;
+}
 
 
 
