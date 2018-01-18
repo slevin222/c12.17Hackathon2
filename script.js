@@ -135,7 +135,7 @@ let display = {
 			let foodPlace = $('<div>', {
 				id: "foodPlace" + h,
 				class: "foodPlace"
-			})
+			});
 			foodInfo.append(foodPlace);
 		}
 		let foodInput = $('<input>', {
@@ -169,15 +169,12 @@ let display = {
 
 
 	}
-}
+};
 
 function getTerm() {
 	let getThisClass = $(this).attr('number');
 	$('.foodInput').val(display.foodObject[getThisClass].name);
-	console.log(display.foodObject);
-
 }
-
 
 
 var markers = [];
@@ -194,65 +191,56 @@ function initMap() {
 		}
 	});
 
-    infoWindow = new google.maps.InfoWindow;
+	infoWindow = new google.maps.InfoWindow;
 
 
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			var pos = {
+				lat: position.coords.latitude,
+				lng: position.coords.longitude
+			};
+			var current = {
+				lat: pos.lat,
+				lng: pos.lng
+			};
+			var marker = new google.maps.Marker({
+				position: current,
+				map: map,
+				// label: "Current"
+			});
+			// infoWindow.setPosition(pos);
+			// infoWindow.setContent('Location found.');
+			// infoWindow.open(map);
+			map.setCenter(pos);
+		}, function() {
+			handleLocationError(true, infoWindow, map.getCenter());
+		});
+	} else {
+		// Browser doesn't support Geolocation
+		handleLocationError(false, infoWindow, map.getCenter());
+	}
 
-            var current = {lat: pos.lat, lng: pos.lng};
-            console.log(current);
 
-            var marker = new google.maps.Marker({
-                position: current,
-                map: map,
-                // label: "Current"
-            });
-
-            // infoWindow.setPosition(pos);
-            // infoWindow.setContent('Location found.');
-            // infoWindow.open(map);
-            map.setCenter(pos);
-        }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-        });
-    } else {
-        // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
-    }
-
-
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(browserHasGeolocation ?
-        'Error: The Geolocation service failed.' :
-        'Error: Your browser doesn\'t support geolocation.');
-    infoWindow.open(map);
-}
+	function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+		infoWindow.setPosition(pos);
+		infoWindow.setContent(browserHasGeolocation ?
+			'Error: The Geolocation service failed.' :
+			'Error: Your browser doesn\'t support geolocation.');
+		infoWindow.open(map);
+	}
 
 	google.maps.event.addListener(map, 'click', function(event) {
-		// 	$('.foodButton').on('click', function() {
-		// 		let term = $('.foodInput').val();
-		// 		placeMarker(event.latLng, term);
-		// 	})
 		$('.restaurantInfo').fadeOut();
 		$('.foodInfo').fadeIn();
 		$('.aTag').remove();
 		let term = $('.foodInput').val();
 		clearMarkers();
 		placeMarker(event.latLng, term);
-		console.log("this is" + event.latLng);
 		currentLocation = event.latLng;
 
 
 	});
-
-
-	// drop([{lat: 33.6441211395679, lng: -117.743128531307}]);
 }
 
 function dropCinema(array) {
@@ -280,7 +268,7 @@ function dropCinema(array) {
 	}
 }
 
-function dropRestaurant(array, data) {
+function dropRestaurant(array) {
 	for (let i = 0; i < array.length; i++) {
 		(function() {
 			let marker = new google.maps.Marker({
@@ -290,28 +278,7 @@ function dropRestaurant(array, data) {
 				animation: google.maps.Animation.DROP
 			});
 			markers.push(marker);
-			google.maps.event.addDomListener(marker, 'click', function() {
-				// when clicking the restaurant tags, show informations
-				// console.log(this);
-				// $('.foodInfo').fadeOut();
-				// let restaurantInfo = $('<div>', {
-				// 	class: 'restaurantInfo'
-				// });
-				// container.append(restaurantInfo);
-				// for (let k = 0; k < 5; k++) {
-				// 	let restaurantTags = $('<div>', {
-				// 		class: "restTag"
-				// 	})
-				// 	restaurantInfo.append(restaurantTags);
-				// }
-				// // let name = data.businesses[]
-				// // let phone =
-				// // 	let price =
-				// // 		let rating =
-				// // 			let open =
-				// console.log(data);
-
-			});
+			google.maps.event.addDomListener(marker, 'click', function() {});
 		})(markers[i]);
 	}
 }
@@ -341,8 +308,8 @@ function placeMarker(location, foodType) {
 
 let movies = {
 	currentMovieId: "",
-	currentCinemasId: [],
 	currentCinemas: [],
+	currentCinemasLocation: [],
 
 	movieDataFrontPage: function() {
 		let ajaxConfig = {
@@ -411,8 +378,6 @@ let movies = {
 								$('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
 							}
 							movies.currentMovieId = this.movie.id;
-							console.log(this.movie.id);
-
 						});
 					}
 				}
@@ -424,13 +389,13 @@ let movies = {
 		$.ajax(ajaxConfig);
 	},
 
-	cinemaDataSearch: function(location, movie_id) {
+	cinemaDataSearch: function(location) {
 		let ajaxConfig = {
 			data: {
 				location: location,
 				limit: 4,
 				distance: 10,
-				movie_id: movie_id,
+				movie_id: movies.currentMovieId,
 				countries: 'US',
 				fields: 'id,name,telephone,website,location,location.address'
 			},
@@ -443,23 +408,24 @@ let movies = {
 				if (!result) {
 					console.log("Something went wrong");
 				} else {
-					console.log(result);
-
-					let cinemaLocations = [];
+					var currentCinemasLocation = [];
 					for (let i = 0; i < result.cinemas.length; i++) {
 						movies.currentCinemas.push(result.cinemas[i]);
-						let cinema = {
-							lat: result.cinemas[i].location.lat,
-							lng: result.cinemas[i].location.lon
-						};
-						cinemaLocations.push(cinema);
-                        // $(".modal2-body").text(movies.currentCinemas[i].name);
 
-                        // $(".modal3-body").text(movies.currentCinemas[i].showtimes.showtimes[i]);
+						movies.fetchShowTimes(i).then((response) => {
+							result.cinemas[i].showTimes = response;
+							let cinema = {
+								lat: result.cinemas[i].location.lat,
+								lng: result.cinemas[i].location.lon
+							};
+							currentCinemasLocation.push(cinema);
+							dropCinema(currentCinemasLocation);
+						}, (err) => {
+							console.log("Error in cinemaDataSearch: ", err)
+						})
 					}
-					console.log(movies.currentCinemas);
-					for
-					dropCinema(cinemaLocations);
+
+
 				}
 			},
 			error: function(result) {
@@ -469,58 +435,55 @@ let movies = {
 		$.ajax(ajaxConfig);
 	},
 
-	displayCinemasMatchingId: function(index) {
+	fetchShowTimes: function(index) {
+		let deferred = $.Deferred();
 		let ajaxConfig = {
 			data: {
 				movie_id: movies.currentMovieId,
-				cinema_id: movies.currentCinemasId[index],
+				cinema_id: movies.currentCinemas[index].id,
 				time_from: movies.setDate(),
-				fields: 'id,name,telephone,website,location,location.address'
+				fields: 'start_at'
 			},
 			type: 'GET',
 			url: 'https://api.internationalshowtimes.com/v4/showtimes/',
 			headers: {
 				'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
 			},
-			success: function(result) {
-				if (!result) {
-					console.log("Something went wrong");
-				} else {
-					console.log(result);
-				}
-			},
-			error: function(result) {
-				console.log(result)
-			}
+			success: deferred.resolve,
+			error: deferred.reject
 		};
 		$.ajax(ajaxConfig);
+		return deferred;
 	},
 
 	setDate: function() {
-		let now = new Date();
-		let year = now.getFullYear();
-		let month = now.getMonth() + 1;
-		let day = now.getDate();
-		let hour = now.getHours();
-		let minute = now.getMinutes();
-		let second = now.getSeconds();
+		var now = new Date();
+		var year = now.getFullYear();
+		var month = now.getMonth() + 1;
+		var day = now.getDate();
+		var hour = now.getHours();
+		var minute = now.getMinutes();
+		var second = now.getSeconds();
 		if (month.toString().length == 1) {
-			let month = '0' + month;
+			var month = '0' + month;
 		}
 		if (day.toString().length == 1) {
-			let day = '0' + day;
+			var day = '0' + day;
 		}
 		if (hour.toString().length == 1) {
-			let hour = '0' + hour;
+			var hour = '0' + hour;
 		}
 		if (minute.toString().length == 1) {
-			let minute = '0' + minute;
+			var minute = '0' + minute;
 		}
 		if (second.toString().length == 1) {
-			let second = '0' + second;
+			var second = '0' + second;
 		}
-		return year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second + "-08:00";
+		var fullDate = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second + "-08:00";
+		return fullDate;
+
 	}
+
 };
 
 function GetYelpData() {
