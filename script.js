@@ -454,10 +454,11 @@ let movies = {
 						};
 						cinemaLocations.push(cinema);
                         // $(".modal2-body").text(movies.currentCinemas[i].name);
+
                         // $(".modal3-body").text(movies.currentCinemas[i].showtimes.showtimes[i]);
 					}
 					console.log(movies.currentCinemas);
-
+					for
 					dropCinema(cinemaLocations);
 				}
 			},
