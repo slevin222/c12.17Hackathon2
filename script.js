@@ -1,7 +1,7 @@
 $(document).ready(initializeApp);
 
 function initializeApp() {
-	$(".btn-primary").click(changeScreen);
+	$(".btn-primary").on("click",changeScreen);
 	$("#container").hide();
 }
 
@@ -13,6 +13,7 @@ function changeScreen() {
 	display.init();
 	initMap();
 	$("#container").fadeIn(1000);
+    $(".btn-primary").off("click",changeScreen);
 }
 
 let display = {
@@ -303,7 +304,7 @@ let movies = {
                         let trailerButton = $("<button>", {
                             id : '#moviebutton'+(movieDataIndex+1),
                             type: "button",
-                            class: "btn btn-default btn-md",
+                            class: "btn btn-default btn-sm",
                             text: "Trailer",
                             'data-target': 'trailerModal',
                             'data-toggle': "modal",
