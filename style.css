@@ -83,13 +83,13 @@ p{
 .movieInfoTitle{
     height: 10%;
     width: 100%;
-    font-size: 1.8em;
+    font-size: 1.2em;
     text-align: center;
 }
 .movieInfoSyn{
     height: 44%;
     width: 100%;
-    font-size: 1.2em;
+    font-size: 1em;
 }
 .movieInfoPics{
     height: 35%;
@@ -181,9 +181,9 @@ p{
 }
 
 
+/*///////////////////Media Mobile Display/////////////////////////////////*/
 
-
-@media screen and (max-width: 780px) {
+@media screen and (max-width: 980px) {
     .movie{
         height: 28vmin;
         width: 19%;
