@@ -184,12 +184,10 @@ var infoWindow;
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
 		zoom: 12,
-		center: current
-
-         //    {
-		// 	lat: 33.6441211395679,
-		// 	lng: -117.743128531307
-		// }
+		center: {
+			lat: 33.6441211395679,
+			lng: -117.743128531307
+		}
 	});
 
     infoWindow = new google.maps.InfoWindow;
@@ -202,11 +200,18 @@ function initMap() {
                 lng: position.coords.longitude
             };
 
-            var current = {}
+            var current = {lat: pos.lat, lng: pos.lng};
+            console.log(current);
 
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
-            infoWindow.open(map);
+            var marker = new google.maps.Marker({
+                position: current,
+                map: map,
+                // label: "Current"
+            });
+
+            // infoWindow.setPosition(pos);
+            // infoWindow.setContent('Location found.');
+            // infoWindow.open(map);
             map.setCenter(pos);
         }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
