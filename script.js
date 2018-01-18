@@ -1,7 +1,7 @@
 $(document).ready(initializeApp);
 
 function initializeApp() {
-	$(".btn-primary").on("click",changeScreen);
+	$(".btn-primary").click(changeScreen);
 	$("#container").hide();
 }
 
@@ -13,7 +13,6 @@ function changeScreen() {
 	display.init();
 	initMap();
 	$("#container").fadeIn(1000);
-    $(".btn-primary").off("click",changeScreen);
 }
 
 let display = {
@@ -66,11 +65,10 @@ let display = {
 
 		for (var x = 1; x < 8; x++) {
 			var foodRow = $('<div>', {
-				class: 'foodType' + x,
-				id: 'foodType',
-				click: function() {
-					getTerm();
-				}
+				id: 'foodType' + x,
+				class: 'foodType',
+				number: (x - 1),
+				click: getTerm
 			});
 			foodRow.css('background-image', "url('" + this.foodObject[x - 1].img + "')");
 			container.append(foodRow);
@@ -157,6 +155,7 @@ let display = {
 			type: "button",
 			class: "btn btn-info btn-md",
 			click: function() {
+				$('.aTag').remove();
 				let term = $('.foodInput').val();
 				placeMarker(currentLocation, term);
 			},
@@ -172,14 +171,18 @@ let display = {
 	}
 }
 
-// function getTerm() {}
+function getTerm() {
+	let getThisClass = $(this).attr('number');
+	$('.foodInput').val(display.foodObject[getThisClass].name);
+	console.log(display.foodObject);
+
+}
 
 
 
 var markers = [];
 var map;
 var currentLocation;
-
 
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -194,7 +197,7 @@ function initMap() {
 		// 		let term = $('.foodInput').val();
 		// 		placeMarker(event.latLng, term);
 		// 	})
-		$('#foodPlace').text('');
+		$('.aTag').remove();
 		let term = $('.foodInput').val();
 		clearMarkers();
 		placeMarker(event.latLng, term);
@@ -209,43 +212,45 @@ function initMap() {
 }
 
 function dropCinema(array) {
-    for (let i = 0; i < array.length; i++) {
-        (function () {
-            let marker = new google.maps.Marker({
-                position: array[i],
-                map: map,
-                icon: './images/Cinema-Icon.png',
-                animation: google.maps.Animation.DROP
-            });
-            markers.push(marker);
-            google.maps.event.addDomListener(marker, 'click', function() {
-                $('.movieInfo').append('<div>',{
-                    'class' : 'movie-times row'
-                });
-                $('.movie-times').append('<div>',{
-                    'class' : 'col-sm-8',
-                    'text'  : movies.currentCinemas[i]
-                });
-            });
-        })(markers[i]);
-    }
+	for (let i = 0; i < array.length; i++) {
+		(function() {
+			let marker = new google.maps.Marker({
+				position: array[i],
+				map: map,
+				icon: './images/Cinema-Icon.png',
+				animation: google.maps.Animation.DROP
+			});
+			markers.push(marker);
+			google.maps.event.addDomListener(marker, 'click', function() {
+				$('.movieInfo').append('<div>', {
+					'class': 'movie-times row'
+				});
+				$('.movie-times').append('<div>', {
+					'class': 'col-sm-8',
+					'text': movies.currentCinemas[i]
+				});
+			});
+		})(markers[i]);
+	}
 }
 
 function dropRestaurant(array) {
-    for (let i = 0; i < array.length; i++) {
-        (function () {
-            let marker = new google.maps.Marker({
-                position: array[i],
-                map: map,
-                icon: './images/Restaurant-Icon.png',
-                animation: google.maps.Animation.DROP
-            });
-            markers.push(marker);
-            google.maps.event.addDomListener(marker, 'click', function() {
-                // $('.movieInfo').
-            });
-        })(markers[i]);
-    }
+	for (let i = 0; i < array.length; i++) {
+		(function() {
+			let marker = new google.maps.Marker({
+				position: array[i],
+				map: map,
+				icon: './images/Restaurant-Icon.png',
+				animation: google.maps.Animation.DROP
+			});
+			markers.push(marker);
+			google.maps.event.addDomListener(marker, 'click', function() {
+				// $('.movieInfo').
+
+				console.log("this is clickdeddfdfdfsdfads");
+			});
+		})(markers[i]);
+	}
 }
 
 function clearMarkers() {
@@ -272,183 +277,183 @@ function placeMarker(location, foodType) {
 }
 
 let movies = {
-    currentMovieId: "",
-    currentCinemasId: [],
-    currentCinemas: [],
+	currentMovieId: "",
+	currentCinemasId: [],
+	currentCinemas: [],
 
-    movieDataFrontPage: function () {
-        let ajaxConfig = {
-            data: {
-                location: "33.6441211395679,-117.743128531307",
-                limit: 10,
-                countries: 'US',
-                fields: 'title,id,poster_image.flat,scene_images.flat,synopsis,trailers'
-            },
-            type: 'GET',
-            url: 'https://api.internationalshowtimes.com/v4/movies/',
-            headers: {
-                'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
-            },
-            success: function (result) {
-                if (!result) {
-                    console.log("We have empty results or something went wrong");
-                }  else {
-                    console.log(result);
-                    for (let movieDataIndex = 0; movieDataIndex < 10; movieDataIndex++) {
-                        let currentMovie = $('#movie' + (movieDataIndex + 1));
-                        currentMovie[0].movie = result.movies[movieDataIndex];
-                        currentMovie.css({
-                            'background-image': "url('" + currentMovie[0].movie.poster_image + "')"
-                        });
-                        // Creates Button
-                        let trailerButton = $("<button>", {
-                            id : '#moviebutton'+(movieDataIndex+1),
-                            type: "button",
-                            class: "btn btn-default btn-sm",
-                            text: "Trailer",
-                            'data-target': 'trailerModal',
-                            'data-toggle': "modal",
-                            on: {
-                                click: function(){
-                                    $('#trailerModal').modal('show');
-                                }
-                            }
-                        });
-                        currentMovie.append(trailerButton);
+	movieDataFrontPage: function() {
+		let ajaxConfig = {
+			data: {
+				location: "33.6441211395679,-117.743128531307",
+				limit: 10,
+				countries: 'US',
+				fields: 'title,id,poster_image.flat,scene_images.flat,synopsis,trailers'
+			},
+			type: 'GET',
+			url: 'https://api.internationalshowtimes.com/v4/movies/',
+			headers: {
+				'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
+			},
+			success: function(result) {
+				if (!result) {
+					console.log("We have empty results or something went wrong");
+				} else {
+					console.log(result);
+					for (let movieDataIndex = 0; movieDataIndex < 10; movieDataIndex++) {
+						let currentMovie = $('#movie' + (movieDataIndex + 1));
+						currentMovie[0].movie = result.movies[movieDataIndex];
+						currentMovie.css({
+							'background-image': "url('" + currentMovie[0].movie.poster_image + "')"
+						});
+						// Creates Button
+						let trailerButton = $("<button>", {
+							id: '#moviebutton' + (movieDataIndex + 1),
+							type: "button",
+							class: "btn btn-default btn-md",
+							text: "Trailer",
+							'data-target': 'trailerModal',
+							'data-toggle': "modal",
+							on: {
+								click: function() {
+									$('#trailerModal').modal('show');
+								}
+							}
+						});
+						currentMovie.append(trailerButton);
 
-                        ////// MOVIE TRAILER ///////
-                        let movieTrailer = result.movies;
-                        let trailer = movieTrailer[movieDataIndex].trailers[0].trailer_files[0].url;
-                        let str = String(trailer);
-                        let res = str.replace("watch?v=", "embed/");
-                        // Mouseover to show button
-                        currentMovie.on('mouseenter', function () {
-                            $(this).find("button").show();
-                        });
-                        currentMovie.on('mouseleave', function () {
-                            $(this).find("button").hide();
-                        });
+						////// MOVIE TRAILER ///////
+						let movieTrailer = result.movies;
+						let trailer = movieTrailer[movieDataIndex].trailers[0].trailer_files[0].url;
+						let str = String(trailer);
+						let res = str.replace("watch?v=", "embed/");
+						// Mouseover to show button
+						currentMovie.on('mouseenter', function() {
+							$(this).find("button").show();
+						});
+						currentMovie.on('mouseleave', function() {
+							$(this).find("button").hide();
+						});
 
-                        $('#movie'+(movieDataIndex + 1)+' button').on('click', function(){
-                            $('#video').attr('src', res);
-                            $('#trailerModal h4').text(result.movies[movieDataIndex].title);
-                        });
+						$('#movie' + (movieDataIndex + 1) + ' button').on('click', function() {
+							$('#video').attr('src', res);
+							$('#trailerModal h4').text(result.movies[movieDataIndex].title);
+						});
 
-                        // Shows Movie Data on Click
-                        currentMovie.on('click', function () {
-                            $('.movieInfoTitle').text(this.movie.title);
-                            $('.movieInfoSyn').text(this.movie.synopsis);
-                            $('.movieInfoPics').empty();
-                            for (let i = 0; i < this.movie.scene_images.length && i < 3; i++) {
-                                $('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
-                            }
-                            movies.currentMovieId = this.movie.id;
-                            console.log(this.movie.id);
+						// Shows Movie Data on Click
+						currentMovie.on('click', function() {
+							$('.movieInfoTitle').text(this.movie.title);
+							$('.movieInfoSyn').text(this.movie.synopsis);
+							$('.movieInfoPics').empty();
+							for (let i = 0; i < this.movie.scene_images.length && i < 3; i++) {
+								$('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
+							}
+							movies.currentMovieId = this.movie.id;
+							console.log(this.movie.id);
 
-                        });
-                    }
-                }
-            },
-            error: function (result) {
-                console.log(result)
-            }
-        };
-        $.ajax(ajaxConfig);
-    },
+						});
+					}
+				}
+			},
+			error: function(result) {
+				console.log(result)
+			}
+		};
+		$.ajax(ajaxConfig);
+	},
 
-    cinemaDataSearch: function (location, movie_id) {
-        let ajaxConfig = {
-            data: {
-                location: location,
-                limit: 4,
-                distance: 10,
-                movie_id: movie_id,
-                countries: 'US',
-                fields: 'id,name,telephone,website,location,location.address'
-            },
-            type: 'GET',
-            url: 'https://api.internationalshowtimes.com/v4/cinemas/',
-            headers: {
-                'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
-            },
-            success: function (result) {
-                if (!result) {
-                    console.log("Something went wrong");
-                } else {
-                    console.log(result);
+	cinemaDataSearch: function(location, movie_id) {
+		let ajaxConfig = {
+			data: {
+				location: location,
+				limit: 4,
+				distance: 10,
+				movie_id: movie_id,
+				countries: 'US',
+				fields: 'id,name,telephone,website,location,location.address'
+			},
+			type: 'GET',
+			url: 'https://api.internationalshowtimes.com/v4/cinemas/',
+			headers: {
+				'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
+			},
+			success: function(result) {
+				if (!result) {
+					console.log("Something went wrong");
+				} else {
+					console.log(result);
 
-                    let cinemaLocations = [];
-                    for (let i = 0; i < result.cinemas.length; i++) {
-                        movies.currentCinemas.push(result.cinemas[i]);
-                        let cinema = {
-                            lat: result.cinemas[i].location.lat,
-                            lng: result.cinemas[i].location.lon
-                        };
-                        cinemaLocations.push(cinema);
-                    }
-                    console.log(movies.currentCinemas);
-                    dropCinema(cinemaLocations);
-                }
-            },
-            error: function (result) {
-                console.log(result)
-            }
-        };
-        $.ajax(ajaxConfig);
-    },
+					let cinemaLocations = [];
+					for (let i = 0; i < result.cinemas.length; i++) {
+						movies.currentCinemas.push(result.cinemas[i]);
+						let cinema = {
+							lat: result.cinemas[i].location.lat,
+							lng: result.cinemas[i].location.lon
+						};
+						cinemaLocations.push(cinema);
+					}
+					console.log(movies.currentCinemas);
+					dropCinema(cinemaLocations);
+				}
+			},
+			error: function(result) {
+				console.log(result)
+			}
+		};
+		$.ajax(ajaxConfig);
+	},
 
-    displayCinemasMatchingId: function (index) {
-        let ajaxConfig = {
-            data: {
-                movie_id: movies.currentMovieId,
-                cinema_id: movies.currentCinemasId[index],
-                time_from: movies.setDate(),
-                fields: 'id,name,telephone,website,location,location.address'
-            },
-            type: 'GET',
-            url: 'https://api.internationalshowtimes.com/v4/showtimes/',
-            headers: {
-                'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
-            },
-            success: function (result) {
-                if (!result) {
-                    console.log("Something went wrong");
-                } else {
-                    console.log(result);
-                }
-            },
-            error: function (result) {
-                console.log(result)
-            }
-        };
-        $.ajax(ajaxConfig);
-    },
+	displayCinemasMatchingId: function(index) {
+		let ajaxConfig = {
+			data: {
+				movie_id: movies.currentMovieId,
+				cinema_id: movies.currentCinemasId[index],
+				time_from: movies.setDate(),
+				fields: 'id,name,telephone,website,location,location.address'
+			},
+			type: 'GET',
+			url: 'https://api.internationalshowtimes.com/v4/showtimes/',
+			headers: {
+				'X-API-Key': 'UITTMomjJcICW40XNigMoGaaCSykTcYd'
+			},
+			success: function(result) {
+				if (!result) {
+					console.log("Something went wrong");
+				} else {
+					console.log(result);
+				}
+			},
+			error: function(result) {
+				console.log(result)
+			}
+		};
+		$.ajax(ajaxConfig);
+	},
 
-    setDate: function () {
-        let now = new Date();
-        let year = now.getFullYear();
-        let month = now.getMonth() + 1;
-        let day = now.getDate();
-        let hour = now.getHours();
-        let minute = now.getMinutes();
-        let second = now.getSeconds();
-        if (month.toString().length == 1) {
-            let month = '0' + month;
-        }
-        if (day.toString().length == 1) {
-            let day = '0' + day;
-        }
-        if (hour.toString().length == 1) {
-            let hour = '0' + hour;
-        }
-        if (minute.toString().length == 1) {
-            let minute = '0' + minute;
-        }
-        if (second.toString().length == 1) {
-            let second = '0' + second;
-        }
-        return year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second + "-08:00";
-    }
+	setDate: function() {
+		let now = new Date();
+		let year = now.getFullYear();
+		let month = now.getMonth() + 1;
+		let day = now.getDate();
+		let hour = now.getHours();
+		let minute = now.getMinutes();
+		let second = now.getSeconds();
+		if (month.toString().length == 1) {
+			let month = '0' + month;
+		}
+		if (day.toString().length == 1) {
+			let day = '0' + day;
+		}
+		if (hour.toString().length == 1) {
+			let hour = '0' + hour;
+		}
+		if (minute.toString().length == 1) {
+			let minute = '0' + minute;
+		}
+		if (second.toString().length == 1) {
+			let second = '0' + second;
+		}
+		return year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second + "-08:00";
+	}
 };
 
 function GetYelpData() {
@@ -490,6 +495,7 @@ function GetYelpData() {
 			let aTag = $("<a>", {
 				"href": data.businesses[dataIndex].url,
 				"target": '_blank',
+				class: "aTag",
 				text: name
 			});
 			$('#foodPlace' + (dataIndex + 1)).append(aTag);
