@@ -246,6 +246,7 @@ function dropRestaurant(array) {
 			markers.push(marker);
 			google.maps.event.addDomListener(marker, 'click', function() {
 				// $('.movieInfo').
+
 				console.log("this is clickdeddfdfdfsdfads");
 			});
 		})(markers[i]);
