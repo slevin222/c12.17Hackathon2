@@ -135,7 +135,7 @@ let display = {
 			let foodPlace = $('<div>', {
 				id: "foodPlace" + h,
 				class: "foodPlace"
-			})
+			});
 			foodInfo.append(foodPlace);
 		}
 		let foodInput = $('<input>', {
@@ -169,13 +169,11 @@ let display = {
 
 
 	}
-}
+};
 
 function getTerm() {
 	let getThisClass = $(this).attr('number');
 	$('.foodInput').val(display.foodObject[getThisClass].name);
-	console.log(display.foodObject);
-
 }
 
 
@@ -202,16 +200,12 @@ function initMap() {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
-
             var current = {lat: pos.lat, lng: pos.lng};
-            console.log(current);
-
             var marker = new google.maps.Marker({
                 position: current,
                 map: map,
                 // label: "Current"
             });
-
             // infoWindow.setPosition(pos);
             // infoWindow.setContent('Location found.');
             // infoWindow.open(map);
@@ -234,28 +228,19 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 }
 
 	google.maps.event.addListener(map, 'click', function(event) {
-		// 	$('.foodButton').on('click', function() {
-		// 		let term = $('.foodInput').val();
-		// 		placeMarker(event.latLng, term);
-		// 	})
 		$('.restaurantInfo').fadeOut();
 		$('.foodInfo').fadeIn();
 		$('.aTag').remove();
 		let term = $('.foodInput').val();
 		clearMarkers();
 		placeMarker(event.latLng, term);
-		console.log("this is" + event.latLng);
 		currentLocation = event.latLng;
 
 
 	});
-
-
-	// drop([{lat: 33.6441211395679, lng: -117.743128531307}]);
 }
 
 function dropCinema(array) {
-    console.log('dropCinema worked');
     for (let i = 0; i < array.length; i++) {
         (function () {
             let marker = new google.maps.Marker({
@@ -389,8 +374,6 @@ let movies = {
                                 $('.movieInfoPics').append($('<img>').attr('src', this.movie.scene_images[i]));
                             }
                             movies.currentMovieId = this.movie.id;
-                            console.log(this.movie.id);
-
                         });
                     }
                 }
@@ -426,7 +409,6 @@ let movies = {
                         movies.currentCinemas.push(result.cinemas[i]);
                         movies.fetchShowTimes(i).then((response)=>{
                             result.cinemas[i].showTimes = response;
-                            console.log(result.cinemas[i]);
                             let cinema = {
                                 lat: result.cinemas[i].location.lat,
                                 lng: result.cinemas[i].location.lon
@@ -490,7 +472,6 @@ let movies = {
             var second = '0' + second;
         }
         var fullDate = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second + "-08:00";
-        console.log(fullDate);
         return fullDate;
 
     }
