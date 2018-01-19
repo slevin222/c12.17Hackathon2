@@ -63,22 +63,22 @@ let display = {
 		}
 		movies.movieDataFrontPage();
 
-		for (var x = 1; x < 8; x++) {
-			var foodRow = $('<div>', {
-				id: 'foodType' + x,
-				class: 'foodType',
-				number: (x - 1),
-				click: getTerm,
-                on:{
-				    click: function(){
-                        $('.foodType').css('border', 'hidden');
-                        $(this).css('border', '1px white solid');
-                    }
-                }
-			});
-			foodRow.css('background-image', "url('" + this.foodObject[x - 1].img + "')");
-			container.append(foodRow);
-		}
+		// for (var x = 1; x < 8; x++) {
+		// 	var foodRow = $('<div>', {
+		// 		id: 'foodType' + x,
+		// 		class: 'foodType',
+		// 		number: (x - 1),
+		// 		click: getTerm,
+         //        on:{
+		// 		    click: function(){
+         //                $('.foodType').css('border', 'hidden');
+         //                $(this).css('border', '1px white solid');
+         //            }
+         //        }
+		// 	});
+		// 	foodRow.css('background-image', "url('" + this.foodObject[x - 1].img + "')");
+		// 	container.append(foodRow);
+		// }
 		let movieInfo = $('<div>', {
 			class: 'movieInfo',
 		});
@@ -172,6 +172,24 @@ let display = {
 			value: "Submit"
 		});
 		foodInfo.append(foodInput, foodButton);
+
+
+        for (var x = 1; x < 8; x++) {
+            var foodRow = $('<div>', {
+                id: 'foodType' + x,
+                class: 'foodType',
+                number: (x - 1),
+                click: getTerm,
+                on:{
+                    click: function(){
+                        $('.foodType').css('border', 'hidden');
+                        $(this).css('border', '1px white solid');
+                    }
+                }
+            });
+            foodRow.css('background-image', "url('" + this.foodObject[x - 1].img + "')");
+            container.append(foodRow);
+        }
 	}
 };
 

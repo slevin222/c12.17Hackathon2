@@ -62,7 +62,7 @@ p{
 #foodType5,
 #foodType6,
 #foodType7{
-    height: 20%;
+    height: 23%;
     width: 11%;
     /*background-color: blue;*/
     margin: 1% 0 0 0;
@@ -81,6 +81,12 @@ p{
     width: 25%;
     background-color: lightgrey;
     margin: .5% 0 0 0;
+    opacity: .9;
+
+}
+.movieInfo:hover,
+.showTimes:hover {
+    opacity: 1;
 
 }
 .movieInfo img{
@@ -108,7 +114,11 @@ p{
     left: 50%;
     transform: translateX(-50%);
     width: 80%;
-    border-radius: 0;
+    border-radius: 2%;
+    background-color: black;
+    color: white;
+    opacity: .5;
+
 }
 
 .movieTitles{
@@ -138,7 +148,7 @@ p{
     width: 48%;
     margin: .5% 0 0 0;
 }
-.restaurantInfo,
+/*.restaurantInfo,*/
 .foodInfo {
     height: 44%;
     width: 25%;
@@ -148,8 +158,12 @@ p{
     text-align: center;
     padding-top: 3%;
     font-size: 2rem;
+    opacity: .9;
 }
+.foodInfo:hover {
+    opacity: 1;
 
+}
 
 .foodPlace{
     height: 17%;
@@ -204,6 +218,13 @@ p{
 #moviebutton9,
 #moviebutton10{
     height: 12%;
+}
+
+.modal-header{
+    padding: 1%;
+    text-align: center;
+    font-weight: bold;
+
 }
 
 
@@ -315,6 +336,6 @@ p{
     }
     #video{
         width: 85vw;
-        height: 35vh;
+        /*height: 35vh;*/
     }
 }
